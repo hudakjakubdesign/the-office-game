@@ -1,4 +1,4 @@
-name: Deploy Grayling game to GitHub Pages
+name: Deploy The Office Game to GitHub Pages
 
 on:
   push:

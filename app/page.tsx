@@ -192,10 +192,6 @@ function drawPerson(
   const skinShadow = "#d98669";
   const trousers = "#29496b";
 
-  ctx.fillStyle = "rgba(14,41,75,.23)";
-  ctx.fillRect(x - 9, y + 15, 18, 2);
-  ctx.fillRect(x - 6, y + 17, 12, 1);
-
   ctx.fillStyle = outline;
   ctx.fillRect(x - 7 + stepLeft, py + 7, 6, 11);
   ctx.fillRect(x + 1 + stepRight, py + 7, 6, 11);
@@ -285,11 +281,6 @@ function drawAtlasPerson(
   frame: number,
   fallback: Pick<Person, "shirt" | "hair" | "look">,
 ) {
-  ctx.fillStyle = "rgba(54, 35, 27, .28)";
-  ctx.beginPath();
-  ctx.ellipse(x, y + 5, 16, 4, 0, 0, Math.PI * 2);
-  ctx.fill();
-
   if (!image?.complete || !image.naturalWidth) {
     drawPerson(ctx, x, y, fallback.shirt, fallback.hair, fallback.look, facing, moving, frame);
     return;
@@ -314,10 +305,10 @@ function drawAtlasPerson(
     sourceY,
     cellWidth,
     cellHeight,
-    Math.round(x - 30),
-    Math.round(y - 55),
-    60,
-    60,
+    Math.round(x - 24),
+    Math.round(y - 43),
+    48,
+    48,
   );
 }
 
@@ -574,15 +565,15 @@ function drawOffice(
       person,
     );
     if (!visited.has(person.id)) {
-      ctx.fillStyle = "#fff4d1";
-      ctx.fillRect(person.x - 5, person.y - 66, 10, 10);
       ctx.fillStyle = "#0e294b";
-      ctx.fillRect(person.x - 1, person.y - 28, 2, 5);
-      ctx.fillRect(person.x - 1, person.y - 21, 2, 1);
-    } else {
-      ctx.fillStyle = "#76957d";
-      ctx.fillRect(person.x - 5, person.y - 66, 10, 9);
-      drawPixelText(ctx, "✓", person.x, person.y - 25, "#163d38", "center");
+      ctx.fillRect(person.x - 8, person.y - 62, 16, 13);
+      ctx.fillRect(person.x - 2, person.y - 49, 5, 3);
+      ctx.fillStyle = "#fff4d1";
+      ctx.fillRect(person.x - 6, person.y - 60, 12, 9);
+      ctx.fillRect(person.x - 1, person.y - 51, 3, 2);
+      ctx.fillStyle = "#d94f5c";
+      ctx.fillRect(person.x - 1, person.y - 58, 2, 5);
+      ctx.fillRect(person.x - 1, person.y - 52, 2, 2);
     }
   });
 

@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 2048 545" role="img" aria-labelledby="title">
+  <title id="title">St Pancras International</title>
+  <rect width="2048" height="545" fill="transparent"/>
+  <g fill="#526fb2">
+    <path d="M260 82 330 20l70 62-70 62-70-62Zm0 126 70-62 70 62-70 62-70-62Zm0 126 70-62 70 62-70 62-70-62Z"/>
+    <text x="0" y="405" font-family="Arial Black,Arial,sans-serif" font-size="390" font-weight="900" letter-spacing="-28">StPancras</text>
+    <text x="1010" y="535" font-family="Arial,sans-serif" font-size="102" font-weight="800" letter-spacing="17">INTERNATIONAL</text>
+  </g>
+</svg>

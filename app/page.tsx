@@ -287,7 +287,7 @@ function drawAtlasPerson(
 ) {
   ctx.fillStyle = "rgba(54, 35, 27, .28)";
   ctx.beginPath();
-  ctx.ellipse(x, y + 5, 8, 2, 0, 0, Math.PI * 2);
+  ctx.ellipse(x, y + 5, 16, 4, 0, 0, Math.PI * 2);
   ctx.fill();
 
   if (!image?.complete || !image.naturalWidth) {
@@ -314,10 +314,10 @@ function drawAtlasPerson(
     sourceY,
     cellWidth,
     cellHeight,
-    Math.round(x - 12),
-    Math.round(y - 19),
-    24,
-    24,
+    Math.round(x - 30),
+    Math.round(y - 55),
+    60,
+    60,
   );
 }
 
@@ -575,13 +575,13 @@ function drawOffice(
     );
     if (!visited.has(person.id)) {
       ctx.fillStyle = "#fff4d1";
-      ctx.fillRect(person.x - 5, person.y - 30, 10, 10);
+      ctx.fillRect(person.x - 5, person.y - 66, 10, 10);
       ctx.fillStyle = "#0e294b";
       ctx.fillRect(person.x - 1, person.y - 28, 2, 5);
       ctx.fillRect(person.x - 1, person.y - 21, 2, 1);
     } else {
       ctx.fillStyle = "#76957d";
-      ctx.fillRect(person.x - 5, person.y - 30, 10, 9);
+      ctx.fillRect(person.x - 5, person.y - 66, 10, 9);
       drawPixelText(ctx, "✓", person.x, person.y - 25, "#163d38", "center");
     }
   });

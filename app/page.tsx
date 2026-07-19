@@ -574,7 +574,7 @@ export default function Home() {
 
   return (
     <main className="game-page">
-      <section className="game-card" aria-label="Grayling office game prototype">
+      <section className="game-card" aria-label="The Office Game, a Grayling office experience">
         <header className="game-header">
           <div className="brand-lockup">
             {/* Grayling's official logo is used here for the client prototype. */}
@@ -585,8 +585,8 @@ export default function Home() {
               alt="Grayling, creating advantage"
             />
             <div>
-              <p className="eyebrow">PIXEL OFFICE  /  EXPERIENCE 01</p>
-              <h1>Create advantage</h1>
+              <p className="eyebrow">THE OFFICE GAME  /  EXPERIENCE 01</p>
+              <h1>The Office Game</h1>
             </div>
           </div>
           <div className="mission" aria-live="polite">
@@ -688,7 +688,7 @@ export default function Home() {
           </div>
         </footer>
       </section>
-      <p className="prototype-note">A playable Grayling office concept. Character art and dialogue can be replaced in the next round.</p>
+      <p className="prototype-note">The Office Game is a playable Grayling office concept. Character art and dialogue can be replaced in the next round.</p>
     </main>
   );
 }

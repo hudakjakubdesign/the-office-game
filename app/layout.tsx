@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Inter, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import "./case-study.css";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -13,8 +14,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "The Office Game | Grayling",
-  description: "The Office Game, a playable top-down pixel art experience for Grayling.",
+  title: "Meet the Team | Grayling",
+  description: "Meet the Team, a playable Grayling office experience with interactive client case studies.",
   other: {
     "codex-preview": "development",
   },
@@ -39,9 +40,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body
-        className={`${inter.variable} ${geistMono.variable} antialiased`}
-      >
+      <body className={`${inter.variable} ${geistMono.variable} antialiased`}>
         {children}
       </body>
     </html>

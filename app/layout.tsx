@@ -13,8 +13,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "The Office Game | Grayling",
-  description: "The Office Game, a playable top-down pixel art experience for Grayling.",
+  title: "Meet the Team | Grayling Experience 01",
+  description: "Meet the Team, a playable Grayling office experience.",
   other: {
     "codex-preview": "development",
   },
@@ -39,9 +39,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body
-        className={`${inter.variable} ${geistMono.variable} antialiased`}
-      >
+      <body className={`${inter.variable} ${geistMono.variable} antialiased`}>
         {children}
       </body>
     </html>

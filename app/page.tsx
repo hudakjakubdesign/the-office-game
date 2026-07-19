@@ -123,16 +123,26 @@ function drawDesk(
   y: number,
   accent: string,
 ) {
-  ctx.fillStyle = "#7e5c48";
-  ctx.fillRect(x + 3, y + 4, 70, 24);
-  ctx.fillStyle = "#c98d62";
+  ctx.fillStyle = "rgba(43, 28, 23, .22)";
+  ctx.fillRect(x + 5, y + 7, 72, 25);
+  const wood = ctx.createLinearGradient(x, y, x, y + 20);
+  wood.addColorStop(0, "#efc18c");
+  wood.addColorStop(0.22, "#dca06d");
+  wood.addColorStop(1, "#a96e4f");
+  ctx.fillStyle = "#704b3d";
+  ctx.fillRect(x + 2, y + 3, 74, 26);
+  ctx.fillStyle = wood;
   ctx.fillRect(x, y, 76, 20);
-  ctx.fillStyle = "#e5ae78";
-  ctx.fillRect(x + 3, y + 3, 70, 3);
+  ctx.fillStyle = "rgba(255, 238, 204, .7)";
+  ctx.fillRect(x + 3, y + 2, 70, 2);
+  ctx.fillStyle = "rgba(92, 50, 37, .38)";
+  ctx.fillRect(x + 2, y + 17, 72, 3);
   ctx.fillStyle = "#2b3850";
   ctx.fillRect(x + 27, y + 3, 25, 13);
   ctx.fillStyle = "#d9f2ef";
   ctx.fillRect(x + 30, y + 5, 19, 8);
+  ctx.fillStyle = "rgba(255,255,255,.65)";
+  ctx.fillRect(x + 31, y + 6, 17, 2);
   ctx.fillStyle = accent;
   ctx.fillRect(x + 31, y + 6, 17, 2);
   ctx.fillStyle = "#46546d";
@@ -263,7 +273,9 @@ function drawAtlasPerson(
   fallback: Pick<Person, "shirt" | "hair" | "look">,
 ) {
   ctx.fillStyle = "rgba(54, 35, 27, .28)";
-  ctx.fillRect(x - 10, y + 15, 20, 3);
+  ctx.beginPath();
+  ctx.ellipse(x, y + 15, 13, 3, 0, 0, Math.PI * 2);
+  ctx.fill();
 
   if (!image?.complete || !image.naturalWidth) {
     drawPerson(ctx, x, y, fallback.shirt, fallback.hair, fallback.look, facing, moving, frame);
@@ -289,10 +301,10 @@ function drawAtlasPerson(
     sourceY,
     cellWidth,
     cellHeight,
-    Math.round(x - 22),
-    Math.round(y - 45),
-    44,
-    62,
+    Math.round(x - 20),
+    Math.round(y - 62),
+    40,
+    80,
   );
 }
 
@@ -303,7 +315,8 @@ function drawOffice(
   frame: number,
   sprites: Partial<Record<SpriteId, HTMLImageElement>>,
 ) {
-  ctx.setTransform(2, 0, 0, 2, 0, 0);
+  const renderScale = ctx.canvas.width / WIDTH;
+  ctx.setTransform(renderScale, 0, 0, renderScale, 0, 0);
   ctx.imageSmoothingEnabled = false;
   ctx.clearRect(0, 0, WIDTH, HEIGHT);
 
@@ -315,10 +328,16 @@ function drawOffice(
     ctx.fillRect(x + 6, 292, 6, 8);
   }
 
+  const wall = ctx.createLinearGradient(0, 28, 0, 54);
+  wall.addColorStop(0, "#fff9ec");
+  wall.addColorStop(0.72, "#f0d9ba");
+  wall.addColorStop(1, "#d6b58f");
   ctx.fillStyle = "#f8ead3";
   ctx.fillRect(12, 28, 456, 248);
-  ctx.fillStyle = "#f0d5ad";
+  ctx.fillStyle = wall;
   ctx.fillRect(12, 28, 456, 21);
+  ctx.fillStyle = "rgba(255,255,255,.7)";
+  ctx.fillRect(28, 29, 424, 2);
   ctx.fillStyle = "#6e3e2d";
   ctx.fillRect(12, 47, 456, 7);
   ctx.fillStyle = "#0e294b";
@@ -336,12 +355,27 @@ function drawOffice(
       ctx.fillRect(x - offset, y + 8, 31, 1);
       ctx.fillStyle = "rgba(255,239,205,.34)";
       ctx.fillRect(x - offset + 2, y + 1, 17, 1);
+      ctx.fillStyle = "rgba(91, 52, 40, .13)";
+      ctx.fillRect(x - offset + 25, y + 2, 1, 5);
     }
   }
 
+  const floorLight = ctx.createLinearGradient(0, 54, 0, 264);
+  floorLight.addColorStop(0, "rgba(255, 244, 219, .34)");
+  floorLight.addColorStop(0.55, "rgba(202, 137, 91, .08)");
+  floorLight.addColorStop(1, "rgba(91, 52, 40, .16)");
+  ctx.fillStyle = floorLight;
+  ctx.fillRect(28, 54, 424, 210);
+
+  ctx.fillStyle = "rgba(48, 35, 31, .2)";
+  ctx.fillRect(166, 184, 158, 62);
   ctx.fillStyle = "#0e294b";
   ctx.fillRect(171, 184, 148, 58);
-  ctx.fillStyle = "#173f68";
+  const rug = ctx.createLinearGradient(176, 189, 314, 237);
+  rug.addColorStop(0, "#214e76");
+  rug.addColorStop(0.52, "#173f68");
+  rug.addColorStop(1, "#0c2a4c");
+  ctx.fillStyle = rug;
   ctx.fillRect(176, 189, 138, 48);
   ctx.fillStyle = "#fff6e7";
   for (let x = 180; x < 310; x += 18) {
@@ -373,6 +407,11 @@ function drawOffice(
   ctx.fillRect(84, 35, 31, 3);
   ctx.fillRect(365, 35, 31, 3);
   ctx.fillRect(411, 35, 24, 3);
+  ctx.fillStyle = "rgba(255,255,255,.55)";
+  ctx.fillRect(39, 34, 29, 1);
+  ctx.fillRect(85, 34, 29, 1);
+  ctx.fillRect(366, 34, 29, 1);
+  ctx.fillRect(412, 34, 22, 1);
   ctx.fillStyle = "#f7cc72";
   ctx.fillRect(42, 36, 7, 2);
   ctx.fillRect(88, 36, 8, 2);
@@ -430,6 +469,8 @@ function drawOffice(
 
   ctx.fillStyle = "#8097a8";
   ctx.fillRect(350, 76, 79, 64);
+  ctx.fillStyle = "rgba(26, 39, 51, .22)";
+  ctx.fillRect(354, 81, 75, 63);
   ctx.fillStyle = "#c7d9db";
   ctx.fillRect(354, 80, 71, 56);
   ctx.fillStyle = "#8c634b";
@@ -438,6 +479,10 @@ function drawOffice(
   ctx.fillRect(358, 86, 56, 36);
   ctx.fillStyle = "#f2d4a7";
   ctx.fillRect(363, 91, 46, 26);
+  ctx.fillStyle = "rgba(255, 246, 224, .7)";
+  ctx.fillRect(365, 93, 42, 2);
+  ctx.fillStyle = "rgba(109, 74, 54, .23)";
+  ctx.fillRect(406, 95, 2, 20);
   ctx.fillStyle = "#586f7f";
   ctx.fillRect(375, 82, 22, 5);
   ctx.fillRect(375, 122, 22, 5);
@@ -576,11 +621,38 @@ export default function Home() {
 
     (Object.entries(files) as [SpriteId, string][]).forEach(([id, filename]) => {
       const image = new Image();
-      image.src = `./${filename}?v=hires-1`;
+      image.src = `./${filename}?v=hires-2`;
       image.onload = () => {
         spritesRef.current[id] = image;
       };
     });
+  }, []);
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+
+    const resizeCanvas = () => {
+      const displayWidth = canvas.getBoundingClientRect().width || WIDTH;
+      const cssScale = displayWidth / WIDTH;
+      const deviceScale = Math.min(Math.max(window.devicePixelRatio || 1, 2), 4);
+      const renderScale = Math.max(2, Math.ceil(cssScale * deviceScale));
+      const nextWidth = WIDTH * renderScale;
+      const nextHeight = HEIGHT * renderScale;
+      if (canvas.width !== nextWidth || canvas.height !== nextHeight) {
+        canvas.width = nextWidth;
+        canvas.height = nextHeight;
+      }
+    };
+
+    resizeCanvas();
+    const observer = new ResizeObserver(resizeCanvas);
+    observer.observe(canvas);
+    window.addEventListener("orientationchange", resizeCanvas);
+    return () => {
+      observer.disconnect();
+      window.removeEventListener("orientationchange", resizeCanvas);
+    };
   }, []);
 
   useEffect(() => {
@@ -728,8 +800,8 @@ export default function Home() {
         <div className="game-stage">
           <canvas
             ref={canvasRef}
-            width={WIDTH * 2}
-            height={HEIGHT * 2}
+            width={WIDTH * 3}
+            height={HEIGHT * 3}
             aria-label="A top-down pixel art office with desks, a kitchen, a meeting room and three colleagues"
           />
 
@@ -761,7 +833,7 @@ export default function Home() {
                     ? "heather-blundell-sprites.png"
                     : dialogue.sprite === "nathan"
                       ? "nathan-kemp-sprites.png"
-                      : "alice-newsham-sprites.png"}?v=hires-1")`,
+                      : "alice-newsham-sprites.png"}?v=hires-2")`,
                 } as React.CSSProperties}
               />
               <div className="dialogue-copy">

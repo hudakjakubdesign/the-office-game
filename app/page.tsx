@@ -636,7 +636,7 @@ export default function Home() {
       const displayWidth = canvas.getBoundingClientRect().width || WIDTH;
       const cssScale = displayWidth / WIDTH;
       const deviceScale = Math.min(Math.max(window.devicePixelRatio || 1, 2), 4);
-      const renderScale = Math.max(2, Math.ceil(cssScale * deviceScale));
+      const renderScale = Math.min(6, Math.max(2, Math.ceil(cssScale * deviceScale)));
       const nextWidth = WIDTH * renderScale;
       const nextHeight = HEIGHT * renderScale;
       if (canvas.width !== nextWidth || canvas.height !== nextHeight) {

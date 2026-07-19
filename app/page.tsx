@@ -576,7 +576,7 @@ export default function Home() {
 
     (Object.entries(files) as [SpriteId, string][]).forEach(([id, filename]) => {
       const image = new Image();
-      image.src = `./${filename}`;
+      image.src = `./${filename}?v=hires-1`;
       image.onload = () => {
         spritesRef.current[id] = image;
       };
@@ -761,7 +761,7 @@ export default function Home() {
                     ? "heather-blundell-sprites.png"
                     : dialogue.sprite === "nathan"
                       ? "nathan-kemp-sprites.png"
-                      : "alice-newsham-sprites.png"}")`,
+                      : "alice-newsham-sprites.png"}?v=hires-1")`,
                 } as React.CSSProperties}
               />
               <div className="dialogue-copy">

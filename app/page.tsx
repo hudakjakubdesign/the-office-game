@@ -40,12 +40,12 @@ const people: Person[] = [
     look: "long",
     sprite: "heather",
     message:
-      "Welcome to Grayling. I’m Heather, UK CEO. Come in, explore the office and meet the teams creating advantage for our clients every day.",
+      "Welcome to Grayling. I’m Heather Blundell, UK CEO. Please explore what Grayling can offer you and discover how we can help grow your business.",
   },
   {
     id: "creative",
     name: "Nathan Kemp",
-    team: "Design & Marketing",
+    team: "Chief Innovation Officer",
     x: 105,
     y: 133,
     shirt: "#66704a",
@@ -53,20 +53,20 @@ const people: Person[] = [
     look: "crop",
     sprite: "nathan",
     message:
-      "We turn strategy into stories people notice, shaping ideas, visuals and campaigns across every channel.",
+      "I lead Grayling’s agency-wide AI adoption programme, helping you unlock its potential for growth, innovation and efficiency.",
   },
   {
     id: "portfolio",
     name: "Alice Newsham",
-    team: "Brand Portfolio",
-    x: 443,
-    y: 105,
+    team: "Head of UK Client Service & North",
+    x: 432,
+    y: 134,
     shirt: "#74706c",
     hair: "#2c2424",
     look: "long",
     sprite: "alice",
     message:
-      "I connect the dots across our brand portfolio, helping each specialist team bring the right expertise to the table.",
+      "I lead the client experience and innovation agenda across the UK, helping you build trust and deliver long-term value for your brand.",
   },
 ];
 
@@ -92,8 +92,8 @@ const collisions = [
   { x: 100, y: 238, w: 47, h: 40 },
   { x: 303, y: 14, w: 14, h: 139 },
   { x: 466, y: 14, w: 14, h: 139 },
-  { x: 303, y: 148, w: 64, h: 17 },
-  { x: 400, y: 148, w: 68, h: 17 },
+  { x: 303, y: 148, w: 23, h: 17 },
+  { x: 446, y: 148, w: 22, h: 17 },
   { x: 369, y: 70, w: 53, h: 68 },
   { x: 347, y: 70, w: 20, h: 68 },
   { x: 423, y: 70, w: 18, h: 68 },
@@ -327,6 +327,19 @@ function drawOffice(
 
   if (officeImage?.complete && officeImage.naturalWidth) {
     ctx.drawImage(officeImage, 0, 0, WIDTH, HEIGHT);
+    const sourceScaleX = officeImage.naturalWidth / WIDTH;
+    const sourceScaleY = officeImage.naturalHeight / HEIGHT;
+    ctx.drawImage(
+      officeImage,
+      326 * sourceScaleX,
+      170 * sourceScaleY,
+      120 * sourceScaleX,
+      17 * sourceScaleY,
+      326,
+      148,
+      120,
+      17,
+    );
   } else {
   ctx.fillStyle = "#0e294b";
   ctx.fillRect(0, 0, WIDTH, HEIGHT);
@@ -788,10 +801,9 @@ export default function Home() {
   };
 
   const beginTour = () => {
-    const heather = people[0];
     setStarted(true);
-    setDialogue(heather);
-    setVisited([heather.id]);
+    setDialogue(null);
+    setVisited([]);
   };
 
   return (
@@ -828,10 +840,10 @@ export default function Home() {
           {!started && (
             <div className="start-panel">
               <span className="tiny-label">WELCOME TO GRAYLING</span>
-              <h2>Ready to create advantage?</h2>
-              <p>Explore the office and meet three teams shaping the work.</p>
+              <h2>Your office tour</h2>
+              <p>Walk through the front door and explore the office. Visit Heather, Nathan and Alice, then tap TALK when you reach each person.</p>
               <button type="button" onClick={beginTour}>
-                Enter the office
+                Start the tour
               </button>
             </div>
           )}
@@ -844,18 +856,17 @@ export default function Home() {
 
           {dialogue && (
             <div className="dialogue" role="dialog" aria-label={`Conversation with ${dialogue.name}`}>
-              <div
-                className="portrait atlas-portrait"
-                style={{
-                  "--shirt": dialogue.shirt,
-                  "--hair": dialogue.hair,
-                  backgroundImage: `url("./${dialogue.sprite === "heather"
-                    ? "heather-sprites.png"
+              <div className="portrait profile-portrait">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={`./${dialogue.sprite === "heather"
+                    ? "heather-blundell-sprites.png"
                     : dialogue.sprite === "nathan"
-                      ? "nathan-sprites.png"
-                      : "alice-sprites.png"}?v=gba-office-1")`,
-                } as React.CSSProperties}
-              />
+                      ? "nathan-kemp-sprites.png"
+                      : "alice-newsham-sprites.png"}?v=profile-1`}
+                  alt=""
+                />
+              </div>
               <div className="dialogue-copy">
                 <div className="speaker-line">
                   <strong>{dialogue.name}</strong>
@@ -921,7 +932,7 @@ export default function Home() {
           </div>
         </footer>
       </section>
-      <p className="prototype-note">The Office Game is a playable Grayling office concept. Character art and dialogue can be replaced in the next round.</p>
+      <p className="prototype-note">Walk through the office and meet all three Grayling leaders to complete your tour.</p>
     </main>
   );
 }

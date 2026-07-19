@@ -254,7 +254,7 @@ kbd {
   bottom: 20px;
   min-height: 115px;
   display: grid;
-  grid-template-columns: 76px 1fr auto;
+  grid-template-columns: 92px 1fr auto;
   align-items: center;
   gap: 18px;
   padding: 16px 18px;
@@ -268,11 +268,26 @@ kbd {
   --shirt: #6f8fe8;
   --hair: #32243b;
   position: relative;
-  width: 64px;
-  height: 64px;
+  width: 86px;
+  height: 86px;
   background: #d8e5dd;
   border: 3px solid var(--timber);
   overflow: hidden;
+}
+
+.profile-portrait {
+  background: #f5e4ca;
+  image-rendering: pixelated;
+}
+
+.profile-portrait img {
+  position: absolute;
+  top: -28%;
+  left: -38%;
+  width: 700%;
+  max-width: none;
+  height: auto;
+  image-rendering: pixelated;
 }
 
 .atlas-portrait {
@@ -535,15 +550,15 @@ kbd {
     right: 6px;
     bottom: 6px;
     min-height: 90px;
-    grid-template-columns: 44px 1fr auto;
+    grid-template-columns: 58px 1fr auto;
     gap: 8px;
     padding: 8px;
     box-shadow: 4px 4px 0 #6d8f8d;
   }
 
   .portrait {
-    width: 44px;
-    height: 44px;
+    width: 58px;
+    height: 58px;
   }
 
   .atlas-portrait {

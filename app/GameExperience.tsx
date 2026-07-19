@@ -9,18 +9,15 @@ type Active = { title: string; subtitle: string; message: string; image?: string
 
 const WIDTH = 480;
 const HEIGHT = 320;
-
 const people: Person[] = [
   { id: "heather", name: "Heather Blundell", team: "UK CEO", x: 307, y: 239, sprite: "heather-sprites.png", message: "Welcome to Grayling. Please explore what Grayling can offer you and discover how we can help grow your business." },
   { id: "nathan", name: "Nathan Kemp", team: "Chief Innovation Officer", x: 105, y: 133, sprite: "nathan-sprites.png", message: "I lead Grayling’s agency-wide AI adoption programme, helping you unlock its potential for growth, innovation and efficiency." },
   { id: "alice", name: "Alice Newsham", team: "Head of UK Client Service & North", x: 432, y: 134, sprite: "alice-sprites.png", message: "I lead the client experience and innovation agenda across the UK, helping you build trust and deliver long-term value for your brand." },
 ];
-
 const cases: CaseStudy[] = [
   { id: "otb", name: "On the Beach", x: 64, y: 42, logo: "on-the-beach-logo.svg", message: "Grayling supported On the Beach with communications work focused on brand visibility, audience engagement and campaign delivery." },
   { id: "stp", name: "St Pancras", x: 112, y: 42, logo: "st-pancras-logo.svg", message: "Grayling supported St Pancras with communications and brand activity designed to strengthen visibility and audience engagement." },
 ];
-
 const walls = [
   { x: 0, y: 0, w: 480, h: 15 }, { x: 0, y: 0, w: 18, h: 320 }, { x: 462, y: 0, w: 18, h: 320 },
   { x: 0, y: 296, w: 220, h: 24 }, { x: 260, y: 296, w: 220, h: 24 },
@@ -32,115 +29,19 @@ const walls = [
   { x: 341, y: 179, w: 112, h: 30 }, { x: 350, y: 238, w: 99, h: 43 },
 ];
 
-function overlap(a: {x:number;y:number;w:number;h:number}, b: {x:number;y:number;w:number;h:number}) {
-  return a.x < b.x + b.w && a.x + a.w > b.x && a.y < b.y + b.h && a.y + a.h > b.y;
-}
+function overlap(a:{x:number;y:number;w:number;h:number},b:{x:number;y:number;w:number;h:number}){return a.x<b.x+b.w&&a.x+a.w>b.x&&a.y<b.y+b.h&&a.y+a.h>b.y;}
+function blocked(x:number,y:number){const feet={x:x-5,y:y-1,w:10,h:8};if(walls.some(w=>overlap(feet,w)))return true;return people.some(p=>overlap(feet,{x:p.x-10,y:p.y-16,w:20,h:25}));}
+function drawSprite(ctx:CanvasRenderingContext2D,image:HTMLImageElement|undefined,x:number,y:number,facing:Facing,moving:boolean,frame:number){if(!image?.complete||!image.naturalWidth)return;const walking=moving&&Math.floor(frame/7)%2===1;const index=facing==="down"?(walking?1:0):facing==="up"?(walking?3:2):facing==="left"?(walking?5:4):(walking?7:6);const sw=image.naturalWidth/4,sh=image.naturalHeight/2;ctx.drawImage(image,(index%4)*sw,Math.floor(index/4)*sh,sw,sh,Math.round(x-24),Math.round(y-43),48,48);}
+function drawLogoPoster(ctx:CanvasRenderingContext2D,image:HTMLImageElement|undefined,x:number,y:number,w:number,h:number,bg:string){ctx.fillStyle="rgba(0,0,0,.22)";ctx.fillRect(x+2,y+2,w,h);ctx.fillStyle="#704936";ctx.fillRect(x,y,w,h);ctx.fillStyle=bg;ctx.fillRect(x+2,y+2,w-4,h-4);if(!image?.complete||!image.naturalWidth)return;const pad=4,scale=Math.min((w-pad*2)/image.naturalWidth,(h-pad*2)/image.naturalHeight),dw=image.naturalWidth*scale,dh=image.naturalHeight*scale;ctx.drawImage(image,x+(w-dw)/2,y+(h-dh)/2,dw,dh);}
+function paintOpenPassage(ctx:CanvasRenderingContext2D){const carpet=(x:number,y:number,w:number,h:number)=>{ctx.fillStyle="#7eaaa9";ctx.fillRect(x,y,w,h);for(let yy=y;yy<y+h;yy+=8){ctx.fillStyle=yy%16?"#6f9a9a":"#86b1ae";ctx.fillRect(x,yy,w,7);}ctx.fillStyle="rgba(255,255,255,.12)";ctx.fillRect(x,y,w,2);};carpet(118,151,226,24);carpet(33,244,115,22);}
 
-function blocked(x: number, y: number) {
-  const feet = { x: x - 5, y: y - 1, w: 10, h: 8 };
-  if (walls.some((w) => overlap(feet, w))) return true;
-  return people.some((p) => overlap(feet, { x: p.x - 10, y: p.y - 16, w: 20, h: 25 }));
-}
-
-function drawSprite(ctx: CanvasRenderingContext2D, image: HTMLImageElement | undefined, x: number, y: number, facing: Facing, moving: boolean, frame: number) {
-  if (!image?.complete || !image.naturalWidth) return;
-  const walking = moving && Math.floor(frame / 7) % 2 === 1;
-  const index = facing === "down" ? (walking ? 1 : 0) : facing === "up" ? (walking ? 3 : 2) : facing === "left" ? (walking ? 5 : 4) : (walking ? 7 : 6);
-  const sw = image.naturalWidth / 4;
-  const sh = image.naturalHeight / 2;
-  ctx.drawImage(image, (index % 4) * sw, Math.floor(index / 4) * sh, sw, sh, Math.round(x - 24), Math.round(y - 43), 48, 48);
-}
-
-function drawLogoPoster(ctx: CanvasRenderingContext2D, image: HTMLImageElement | undefined, x: number, y: number, w: number, h: number, bg: string) {
-  ctx.fillStyle = "rgba(0,0,0,.22)"; ctx.fillRect(x + 2, y + 2, w, h);
-  ctx.fillStyle = "#704936"; ctx.fillRect(x, y, w, h);
-  ctx.fillStyle = bg; ctx.fillRect(x + 2, y + 2, w - 4, h - 4);
-  if (!image?.complete || !image.naturalWidth) return;
-  const pad = 4; const scale = Math.min((w - pad * 2) / image.naturalWidth, (h - pad * 2) / image.naturalHeight);
-  const dw = image.naturalWidth * scale; const dh = image.naturalHeight * scale;
-  ctx.drawImage(image, x + (w - dw) / 2, y + (h - dh) / 2, dw, dh);
-}
-
-function paintOpenPassage(ctx: CanvasRenderingContext2D) {
-  const carpet = (x:number,y:number,w:number,h:number) => {
-    ctx.fillStyle = "#7eaaa9"; ctx.fillRect(x,y,w,h);
-    for (let yy=y; yy<y+h; yy+=8) { ctx.fillStyle = yy % 16 ? "#6f9a9a" : "#86b1ae"; ctx.fillRect(x,yy,w,7); }
-    ctx.fillStyle = "rgba(255,255,255,.12)"; ctx.fillRect(x,y,w,2);
-  };
-  carpet(118, 151, 226, 24);
-  carpet(33, 244, 115, 22);
-}
-
-export default function GameExperience() {
-  const canvasRef = useRef<HTMLCanvasElement>(null);
-  const keys = useRef(new Set<string>());
-  const player = useRef({ x: 240, y: 286, facing: "up" as Facing, moving: false });
-  const images = useRef<Record<string, HTMLImageElement>>({});
-  const [started, setStarted] = useState(false);
-  const [nearby, setNearby] = useState<Person | CaseStudy | null>(null);
-  const [active, setActive] = useState<Active>(null);
-  const [visited, setVisited] = useState<string[]>([]);
-
-  useEffect(() => {
-    ["office-map-welcome.png", "player-chibi-sprites.png", "grayling-g.svg", ...people.map(p=>p.sprite), ...cases.map(c=>c.logo)].forEach((src) => {
-      const img = new Image(); img.src = `./${src}?v=case-demo-1`; images.current[src] = img;
-    });
-  }, []);
-
-  const interact = useCallback(() => {
-    if (active) { setActive(null); return; }
-    if (!nearby) return;
-    if ("team" in nearby) {
-      setActive({ title: nearby.name, subtitle: nearby.team, message: nearby.message, image: nearby.sprite.replace("-sprites.png", "-newsham-sprites.png") });
-      setVisited((v) => v.includes(nearby.id) ? v : [...v, nearby.id]);
-    } else {
-      setActive({ title: nearby.name, subtitle: "Grayling case study", message: nearby.message, image: nearby.logo });
-    }
-  }, [active, nearby]);
-
-  useEffect(() => {
-    const down = (e: KeyboardEvent) => { const k=e.key.toLowerCase(); if (["arrowup","arrowdown","arrowleft","arrowright"," "].includes(k)) e.preventDefault(); if (["e","enter"," "].includes(k) && !e.repeat) interact(); keys.current.add(k); };
-    const up = (e: KeyboardEvent) => keys.current.delete(e.key.toLowerCase());
-    addEventListener("keydown", down); addEventListener("keyup", up); return () => { removeEventListener("keydown", down); removeEventListener("keyup", up); };
-  }, [interact]);
-
-  useEffect(() => {
-    const canvas = canvasRef.current; const ctx = canvas?.getContext("2d"); if (!canvas || !ctx) return;
-    const resize = () => { const scale = Math.max(2, Math.ceil((canvas.getBoundingClientRect().width / WIDTH) * Math.min(devicePixelRatio || 1, 3))); canvas.width = WIDTH * scale; canvas.height = HEIGHT * scale; };
-    resize(); const ro = new ResizeObserver(resize); ro.observe(canvas);
-    let raf=0, frame=0;
-    const loop = () => {
-      frame++; const p=player.current; let dx=0,dy=0;
-      if (started && !active) { if(keys.current.has("arrowleft")||keys.current.has("a"))dx--; if(keys.current.has("arrowright")||keys.current.has("d"))dx++; if(keys.current.has("arrowup")||keys.current.has("w"))dy--; if(keys.current.has("arrowdown")||keys.current.has("s"))dy++; }
-      if(dx&&dy){dx*=.707;dy*=.707;} const speed=1.18;
-      if(dx){const nx=p.x+dx*speed;if(!blocked(nx,p.y))p.x=nx;p.facing=dx<0?"left":"right";}
-      if(dy){const ny=p.y+dy*speed;if(!blocked(p.x,ny))p.y=ny;p.facing=dy<0?"up":"down";}
-      p.moving=!!(dx||dy);
-      const targets=[...people,...cases]; const close=targets.map(t=>({t,d:Math.hypot(t.x-p.x,t.y-p.y)})).sort((a,b)=>a.d-b.d)[0]; setNearby(close&&close.d<32?close.t:null);
-      const scale=canvas.width/WIDTH; ctx.setTransform(scale,0,0,scale,0,0); ctx.imageSmoothingEnabled=false; ctx.clearRect(0,0,WIDTH,HEIGHT);
-      const office=images.current["office-map-welcome.png"]; if(office?.complete)ctx.drawImage(office,0,0,WIDTH,HEIGHT);
-      paintOpenPassage(ctx);
-      drawLogoPoster(ctx, images.current["on-the-beach-logo.svg"], 34, 31, 58, 20, "#ffdc00");
-      drawLogoPoster(ctx, images.current["st-pancras-logo.svg"], 96, 31, 62, 20, "#fffdf8");
-      people.forEach((person)=>{
-        drawSprite(ctx,images.current[person.sprite],person.x,person.y,"down",false,frame);
-        if(!visited.includes(person.id)){const g=images.current["grayling-g.svg"];if(g?.complete)ctx.drawImage(g,person.x-8,person.y-62,16,16);}
-      });
-      drawSprite(ctx,images.current["player-chibi-sprites.png"],p.x,p.y,p.facing,p.moving,frame);
-      raf=requestAnimationFrame(loop);
-    };
-    raf=requestAnimationFrame(loop); return()=>{cancelAnimationFrame(raf);ro.disconnect();};
-  }, [started, active, visited]);
-
-  const setTouch=(k:string,on:boolean)=>on?keys.current.add(k):keys.current.delete(k);
-
-  return <main className="game-page"><section className="game-card" aria-label="Meet the Team, a Grayling office experience">
-    <header className="game-header"><div className="brand-lockup"><img className="grayling-logo" src="https://grayling.com/wp-content/uploads/2023/11/GraylingCreatingAdvantage_Logo_Blue.png" alt="Grayling"/><div><p className="eyebrow">GRAYLING / EXPERIENCE 01</p><h1>Meet the Team</h1></div></div><div className="mission"><span>People met</span><strong>{visited.length} / {people.length}</strong></div></header>
-    <div className="game-stage"><canvas ref={canvasRef}/>
-      {!started&&<div className="start-panel"><span className="tiny-label">WELCOME TO GRAYLING</span><h2>Meet the Team</h2><p>Explore the office, meet the team and discover two client case studies.</p><button onClick={()=>setStarted(true)}>Start the experience</button></div>}
-      {started&&nearby&&!active&&<button className="talk-prompt" onClick={interact}><kbd>E</kbd> {"team" in nearby?`Talk to ${nearby.name}`:`View ${nearby.name}`}</button>}
-      {active&&<div className="dialogue" role="dialog"><div className="portrait profile-portrait"><img src={`./${active.image}`} alt=""/></div><div className="dialogue-copy"><div className="speaker-line"><strong>{active.title}</strong><span>{active.subtitle}</span></div><p>{active.message}</p></div><button className="dialogue-close" onClick={interact}>×</button></div>}
-    </div>
-    <footer className="game-footer"><div className="desktop-controls"><span><kbd>WASD</kbd> or <kbd>ARROWS</kbd> to move</span><span><kbd>E</kbd> or <kbd>ENTER</kbd> to interact</span></div><div className="touch-controls"><div className="d-pad"><button className="up" onPointerDown={()=>setTouch("arrowup",true)} onPointerUp={()=>setTouch("arrowup",false)}>▲</button><button className="left" onPointerDown={()=>setTouch("arrowleft",true)} onPointerUp={()=>setTouch("arrowleft",false)}>◀</button><button className="down" onPointerDown={()=>setTouch("arrowdown",true)} onPointerUp={()=>setTouch("arrowdown",false)}>▼</button><button className="right" onPointerDown={()=>setTouch("arrowright",true)} onPointerUp={()=>setTouch("arrowright",false)}>▶</button></div><button className="action-button" onClick={interact}>VIEW</button></div></footer>
-  </section></main>;
+export default function GameExperience(){
+  const canvasRef=useRef<HTMLCanvasElement>(null),keys=useRef(new Set<string>()),player=useRef({x:240,y:286,facing:"up" as Facing,moving:false}),images=useRef<Record<string,HTMLImageElement>>({});
+  const[started,setStarted]=useState(false),[nearby,setNearby]=useState<Person|CaseStudy|null>(null),[active,setActive]=useState<Active>(null),[visited,setVisited]=useState<string[]>([]);
+  useEffect(()=>{["office-map-welcome.png","player-chibi-sprites.png","grayling-g.svg",...people.map(p=>p.sprite),...cases.map(c=>c.logo)].forEach(src=>{const img=new Image();img.src=`./${src}?v=case-demo-2`;images.current[src]=img;});},[]);
+  const interact=useCallback(()=>{if(active){setActive(null);return;}if(!nearby)return;if("team" in nearby){setActive({title:nearby.name,subtitle:nearby.team,message:nearby.message,image:nearby.sprite});setVisited(v=>v.includes(nearby.id)?v:[...v,nearby.id]);}else setActive({title:nearby.name,subtitle:"Grayling case study",message:nearby.message,image:nearby.logo});},[active,nearby]);
+  useEffect(()=>{const down=(e:KeyboardEvent)=>{const k=e.key.toLowerCase();if(["arrowup","arrowdown","arrowleft","arrowright"," "].includes(k))e.preventDefault();if(["e","enter"," "].includes(k)&&!e.repeat)interact();keys.current.add(k);},up=(e:KeyboardEvent)=>keys.current.delete(e.key.toLowerCase());addEventListener("keydown",down);addEventListener("keyup",up);return()=>{removeEventListener("keydown",down);removeEventListener("keyup",up);};},[interact]);
+  useEffect(()=>{const canvas=canvasRef.current,ctx=canvas?.getContext("2d");if(!canvas||!ctx)return;const resize=()=>{const scale=Math.max(2,Math.ceil((canvas.getBoundingClientRect().width/WIDTH)*Math.min(devicePixelRatio||1,3)));canvas.width=WIDTH*scale;canvas.height=HEIGHT*scale;};resize();const ro=new ResizeObserver(resize);ro.observe(canvas);let raf=0,frame=0;const loop=()=>{frame++;const p=player.current;let dx=0,dy=0;if(started&&!active){if(keys.current.has("arrowleft")||keys.current.has("a"))dx--;if(keys.current.has("arrowright")||keys.current.has("d"))dx++;if(keys.current.has("arrowup")||keys.current.has("w"))dy--;if(keys.current.has("arrowdown")||keys.current.has("s"))dy++;}if(dx&&dy){dx*=.707;dy*=.707;}const speed=1.18;if(dx){const nx=p.x+dx*speed;if(!blocked(nx,p.y))p.x=nx;p.facing=dx<0?"left":"right";}if(dy){const ny=p.y+dy*speed;if(!blocked(p.x,ny))p.y=ny;p.facing=dy<0?"up":"down";}p.moving=!!(dx||dy);const close=[...people,...cases].map(t=>({t,d:Math.hypot(t.x-p.x,t.y-p.y)})).sort((a,b)=>a.d-b.d)[0];setNearby(close&&close.d<32?close.t:null);const scale=canvas.width/WIDTH;ctx.setTransform(scale,0,0,scale,0,0);ctx.imageSmoothingEnabled=false;ctx.clearRect(0,0,WIDTH,HEIGHT);const office=images.current["office-map-welcome.png"];if(office?.complete)ctx.drawImage(office,0,0,WIDTH,HEIGHT);paintOpenPassage(ctx);drawLogoPoster(ctx,images.current["on-the-beach-logo.svg"],34,31,58,20,"#ffdc00");drawLogoPoster(ctx,images.current["st-pancras-logo.svg"],96,31,62,20,"#fffdf8");people.forEach(person=>{drawSprite(ctx,images.current[person.sprite],person.x,person.y,"down",false,frame);if(!visited.includes(person.id)){const g=images.current["grayling-g.svg"];if(g?.complete)ctx.drawImage(g,person.x-8,person.y-62,16,16);}});drawSprite(ctx,images.current["player-chibi-sprites.png"],p.x,p.y,p.facing,p.moving,frame);raf=requestAnimationFrame(loop);};raf=requestAnimationFrame(loop);return()=>{cancelAnimationFrame(raf);ro.disconnect();};},[started,active,visited]);
+  const setTouch=(k:string,on:boolean)=>on?keys.current.add(k):keys.current.delete(k),isCase=active?.image?.endsWith(".svg");
+  return <main className="game-page"><section className="game-card" aria-label="Meet the Team, a Grayling office experience"><header className="game-header"><div className="brand-lockup"><img className="grayling-logo" src="https://grayling.com/wp-content/uploads/2023/11/GraylingCreatingAdvantage_Logo_Blue.png" alt="Grayling"/><div><p className="eyebrow">GRAYLING</p><h1>Meet the Team</h1></div></div><div className="mission"><span>People met</span><strong>{visited.length} / {people.length}</strong></div></header><div className="game-stage"><canvas ref={canvasRef}/>{!started&&<div className="start-panel"><span className="tiny-label">WELCOME TO GRAYLING</span><h2>Meet the Team</h2><p>Explore the office, meet the team and discover two client case studies.</p><button onClick={()=>setStarted(true)}>Start the experience</button></div>}{started&&nearby&&!active&&<button className="talk-prompt" onClick={interact}><kbd>E</kbd> {"team" in nearby?`Talk to ${nearby.name}`:`View ${nearby.name}`}</button>}{active&&<div className="dialogue" role="dialog"><div className={`portrait profile-portrait ${isCase?"case-study-logo":"sprite-profile"}`}><img src={`./${active.image}`} alt=""/></div><div className="dialogue-copy"><div className="speaker-line"><strong>{active.title}</strong><span>{active.subtitle}</span></div><p>{active.message}</p></div><button className="dialogue-close" onClick={interact}>×</button></div>}</div><footer className="game-footer"><div className="desktop-controls"><span><kbd>WASD</kbd> or <kbd>ARROWS</kbd> to move</span><span><kbd>E</kbd> or <kbd>ENTER</kbd> to interact</span></div><div className="touch-controls"><div className="d-pad"><button className="up" onPointerDown={()=>setTouch("arrowup",true)} onPointerUp={()=>setTouch("arrowup",false)}>▲</button><button className="left" onPointerDown={()=>setTouch("arrowleft",true)} onPointerUp={()=>setTouch("arrowleft",false)}>◀</button><button className="down" onPointerDown={()=>setTouch("arrowdown",true)} onPointerUp={()=>setTouch("arrowdown",false)}>▼</button><button className="right" onPointerDown={()=>setTouch("arrowright",true)} onPointerUp={()=>setTouch("arrowright",false)}>▶</button></div><button className="action-button" onClick={interact}>VIEW</button></div></footer></section></main>;
 }

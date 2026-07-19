@@ -2,6 +2,10 @@
 
 A playable Grayling-branded top-down pixel-art office demo. Walk through a compact corporate office and meet colleagues from Finance, Design & Marketing, and Brand Portfolio.
 
+## Live demo
+
+Play [The Office Game](https://hudakjakubdesign.github.io/the-office-game/).
+
 ## Run locally
 
 1. Install Node.js 22 or newer.

@@ -13,8 +13,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Grayling Pixel Office",
-  description: "A playable top-down pixel art office experience.",
+  title: "The Office Game | Grayling",
+  description: "The Office Game, a playable top-down pixel art experience for Grayling.",
   other: {
     "codex-preview": "development",
   },

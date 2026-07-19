@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 738 351" role="img" aria-labelledby="title">
+  <title id="title">On the Beach</title>
+  <path fill="#ffdc00" d="M48 23h541c17 0 31 7 42 20l79 96c18 22 18 50 0 72l-79 96c-11 14-25 21-42 21H48c-19 0-34-6-44-18C-5 298-10 284-10 266V84c0-18 5-33 14-44 10-12 25-17 44-17Z"/>
+  <g fill="#163b98" font-family="Arial Black,Arial,sans-serif" font-weight="900">
+    <text x="165" y="146" font-size="76">On the</text>
+    <text x="53" y="260" font-size="154">Beach</text>
+  </g>
+  <g fill="#163b98">
+    <path d="M510 255c9-53 26-96 51-130 10-13 22-25 36-35-16-3-31 0-46 9 15-24 37-34 66-28-14-16-33-22-56-17 30-25 63-18 97 20 22 26 31 56 28 91-5-34-23-57-55-69 34-3 61 12 82 44-4-36-25-60-63-72 40-5 72 13 95 53-6-46-32-74-77-84 55-11 96 10 124 65 8 17 12 36 13 58 0 30-6 62-18 95H510Z" transform="translate(-110 0) scale(.72)"/>
+    <path d="M497 260c38-1 73 1 103 7 35 7 64 20 88 39H472c5-15 13-31 25-46Z"/>
+  </g>
+</svg>

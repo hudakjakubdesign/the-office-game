@@ -26,15 +26,15 @@ type Player = {
 };
 
 const WIDTH = 480;
-const HEIGHT = 300;
+const HEIGHT = 320;
 
 const people: Person[] = [
   {
     id: "heather",
     name: "Heather Blundell",
     team: "UK CEO",
-    x: 240,
-    y: 214,
+    x: 307,
+    y: 239,
     shirt: "#1d2029",
     hair: "#f2bd55",
     look: "long",
@@ -46,8 +46,8 @@ const people: Person[] = [
     id: "creative",
     name: "Nathan Kemp",
     team: "Design & Marketing",
-    x: 287,
-    y: 176,
+    x: 105,
+    y: 133,
     shirt: "#66704a",
     hair: "#c79648",
     look: "crop",
@@ -59,8 +59,8 @@ const people: Person[] = [
     id: "portfolio",
     name: "Alice Newsham",
     team: "Brand Portfolio",
-    x: 387,
-    y: 158,
+    x: 443,
+    y: 105,
     shirt: "#74706c",
     hair: "#2c2424",
     look: "long",
@@ -71,21 +71,34 @@ const people: Person[] = [
 ];
 
 const collisions = [
-  { x: 12, y: 28, w: 456, h: 26 },
-  { x: 12, y: 28, w: 16, h: 248 },
-  { x: 452, y: 28, w: 16, h: 248 },
-  { x: 12, y: 264, w: 208, h: 12 },
-  { x: 260, y: 264, w: 208, h: 12 },
-  { x: 30, y: 53, w: 112, h: 25 },
-  { x: 31, y: 79, w: 25, h: 40 },
-  { x: 73, y: 105, w: 64, h: 27 },
-  { x: 159, y: 68, w: 76, h: 32 },
-  { x: 256, y: 68, w: 76, h: 32 },
-  { x: 159, y: 137, w: 76, h: 29 },
-  { x: 255, y: 137, w: 76, h: 29 },
-  { x: 350, y: 76, w: 79, h: 64 },
-  { x: 322, y: 211, w: 61, h: 28 },
-  { x: 401, y: 196, w: 36, h: 48 },
+  { x: 0, y: 0, w: 480, h: 15 },
+  { x: 0, y: 0, w: 18, h: 320 },
+  { x: 462, y: 0, w: 18, h: 320 },
+  { x: 0, y: 296, w: 220, h: 24 },
+  { x: 260, y: 296, w: 220, h: 24 },
+  { x: 36, y: 66, w: 51, h: 47 },
+  { x: 121, y: 66, w: 52, h: 47 },
+  { x: 36, y: 134, w: 51, h: 44 },
+  { x: 121, y: 134, w: 52, h: 44 },
+  { x: 184, y: 14, w: 14, h: 138 },
+  { x: 290, y: 14, w: 14, h: 138 },
+  { x: 184, y: 145, w: 47, h: 13 },
+  { x: 260, y: 145, w: 44, h: 13 },
+  { x: 202, y: 82, w: 82, h: 38 },
+  { x: 190, y: 126, w: 41, h: 23 },
+  { x: 250, y: 126, w: 45, h: 23 },
+  { x: 188, y: 203, w: 104, h: 38 },
+  { x: 25, y: 219, w: 54, h: 31 },
+  { x: 100, y: 238, w: 47, h: 40 },
+  { x: 303, y: 14, w: 14, h: 139 },
+  { x: 466, y: 14, w: 14, h: 139 },
+  { x: 303, y: 148, w: 64, h: 17 },
+  { x: 400, y: 148, w: 68, h: 17 },
+  { x: 369, y: 70, w: 53, h: 68 },
+  { x: 347, y: 70, w: 20, h: 68 },
+  { x: 423, y: 70, w: 18, h: 68 },
+  { x: 341, y: 179, w: 112, h: 30 },
+  { x: 350, y: 238, w: 99, h: 43 },
 ];
 
 function drawPixelText(
@@ -274,7 +287,7 @@ function drawAtlasPerson(
 ) {
   ctx.fillStyle = "rgba(54, 35, 27, .28)";
   ctx.beginPath();
-  ctx.ellipse(x, y + 15, 13, 3, 0, 0, Math.PI * 2);
+  ctx.ellipse(x, y + 5, 8, 2, 0, 0, Math.PI * 2);
   ctx.fill();
 
   if (!image?.complete || !image.naturalWidth) {
@@ -301,10 +314,10 @@ function drawAtlasPerson(
     sourceY,
     cellWidth,
     cellHeight,
-    Math.round(x - 20),
-    Math.round(y - 62),
-    40,
-    80,
+    Math.round(x - 12),
+    Math.round(y - 19),
+    24,
+    24,
   );
 }
 
@@ -314,12 +327,16 @@ function drawOffice(
   visited: Set<string>,
   frame: number,
   sprites: Partial<Record<SpriteId, HTMLImageElement>>,
+  officeImage: HTMLImageElement | null,
 ) {
   const renderScale = ctx.canvas.width / WIDTH;
   ctx.setTransform(renderScale, 0, 0, renderScale, 0, 0);
   ctx.imageSmoothingEnabled = false;
   ctx.clearRect(0, 0, WIDTH, HEIGHT);
 
+  if (officeImage?.complete && officeImage.naturalWidth) {
+    ctx.drawImage(officeImage, 0, 0, WIDTH, HEIGHT);
+  } else {
   ctx.fillStyle = "#0e294b";
   ctx.fillRect(0, 0, WIDTH, HEIGHT);
   ctx.fillStyle = "#1b456f";
@@ -541,11 +558,9 @@ function drawOffice(
   ctx.fillStyle = "#d9e8e4";
   ctx.fillRect(238, 260, 4, 5);
   drawPixelText(ctx, "LIFT", 240, 284, "#d9e8e4", "center");
+  }
 
-  // Keep the office's crisp pixel construction, while rendering the supplied
-  // character illustrations with smooth high-resolution scaling.
-  ctx.imageSmoothingEnabled = true;
-  ctx.imageSmoothingQuality = "high";
+  ctx.imageSmoothingEnabled = false;
 
   people.forEach((person) => {
     drawAtlasPerson(
@@ -560,14 +575,14 @@ function drawOffice(
     );
     if (!visited.has(person.id)) {
       ctx.fillStyle = "#fff4d1";
-      ctx.fillRect(person.x - 5, person.y - 55, 10, 10);
+      ctx.fillRect(person.x - 5, person.y - 30, 10, 10);
       ctx.fillStyle = "#0e294b";
-      ctx.fillRect(person.x - 1, person.y - 53, 2, 5);
-      ctx.fillRect(person.x - 1, person.y - 46, 2, 1);
+      ctx.fillRect(person.x - 1, person.y - 28, 2, 5);
+      ctx.fillRect(person.x - 1, person.y - 21, 2, 1);
     } else {
       ctx.fillStyle = "#76957d";
-      ctx.fillRect(person.x - 5, person.y - 55, 10, 9);
-      drawPixelText(ctx, "✓", person.x, person.y - 50, "#163d38", "center");
+      ctx.fillRect(person.x - 5, person.y - 30, 10, 9);
+      drawPixelText(ctx, "✓", person.x, person.y - 25, "#163d38", "center");
     }
   });
 
@@ -584,7 +599,7 @@ function drawOffice(
 }
 
 function isBlocked(x: number, y: number) {
-  const feet = { x: x - 5, y: y + 10, w: 10, h: 7 };
+  const feet = { x: x - 4, y: y + 1, w: 8, h: 5 };
   return collisions.some(
     (block) =>
       feet.x < block.x + block.w &&
@@ -597,10 +612,11 @@ function isBlocked(x: number, y: number) {
 export default function Home() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const spritesRef = useRef<Partial<Record<SpriteId, HTMLImageElement>>>({});
+  const officeRef = useRef<HTMLImageElement | null>(null);
   const keysRef = useRef<Set<string>>(new Set());
   const playerRef = useRef<Player>({
     x: 240,
-    y: 241,
+    y: 298,
     facing: "up",
     moving: false,
   });
@@ -613,19 +629,25 @@ export default function Home() {
 
   useEffect(() => {
     const files: Record<SpriteId, string> = {
-      heather: "heather-blundell-sprites.png",
-      nathan: "nathan-kemp-sprites.png",
-      alice: "alice-newsham-sprites.png",
-      player: "visitor-sprites.png",
+      heather: "heather-sprites.png",
+      nathan: "nathan-sprites.png",
+      alice: "alice-sprites.png",
+      player: "player-chibi-sprites.png",
     };
 
     (Object.entries(files) as [SpriteId, string][]).forEach(([id, filename]) => {
       const image = new Image();
-      image.src = `./${filename}?v=hires-2`;
+      image.src = `./${filename}?v=gba-office-1`;
       image.onload = () => {
         spritesRef.current[id] = image;
       };
     });
+
+    const office = new Image();
+    office.src = "./office-map-welcome.png?v=gba-office-1";
+    office.onload = () => {
+      officeRef.current = office;
+    };
   }, []);
 
   useEffect(() => {
@@ -734,7 +756,14 @@ export default function Home() {
         setNearby(closePerson ?? null);
       }
 
-      drawOffice(ctx, player, visitedRef.current, frame, spritesRef.current);
+      drawOffice(
+        ctx,
+        player,
+        visitedRef.current,
+        frame,
+        spritesRef.current,
+        officeRef.current,
+      );
       animationFrame = requestAnimationFrame(update);
     };
 
@@ -830,10 +859,10 @@ export default function Home() {
                   "--shirt": dialogue.shirt,
                   "--hair": dialogue.hair,
                   backgroundImage: `url("./${dialogue.sprite === "heather"
-                    ? "heather-blundell-sprites.png"
+                    ? "heather-sprites.png"
                     : dialogue.sprite === "nathan"
-                      ? "nathan-kemp-sprites.png"
-                      : "alice-newsham-sprites.png"}?v=hires-2")`,
+                      ? "nathan-sprites.png"
+                      : "alice-sprites.png"}?v=gba-office-1")`,
                 } as React.CSSProperties}
               />
               <div className="dialogue-copy">
@@ -870,6 +899,7 @@ export default function Home() {
                 onPointerDown={() => setTouchKey("arrowup", true)}
                 onPointerUp={() => setTouchKey("arrowup", false)}
                 onPointerCancel={() => setTouchKey("arrowup", false)}
+                onPointerLeave={() => setTouchKey("arrowup", false)}
               >▲</button>
               <button
                 className="left"
@@ -877,6 +907,7 @@ export default function Home() {
                 onPointerDown={() => setTouchKey("arrowleft", true)}
                 onPointerUp={() => setTouchKey("arrowleft", false)}
                 onPointerCancel={() => setTouchKey("arrowleft", false)}
+                onPointerLeave={() => setTouchKey("arrowleft", false)}
               >◀</button>
               <button
                 className="down"
@@ -884,6 +915,7 @@ export default function Home() {
                 onPointerDown={() => setTouchKey("arrowdown", true)}
                 onPointerUp={() => setTouchKey("arrowdown", false)}
                 onPointerCancel={() => setTouchKey("arrowdown", false)}
+                onPointerLeave={() => setTouchKey("arrowdown", false)}
               >▼</button>
               <button
                 className="right"
@@ -891,6 +923,7 @@ export default function Home() {
                 onPointerDown={() => setTouchKey("arrowright", true)}
                 onPointerUp={() => setTouchKey("arrowright", false)}
                 onPointerCancel={() => setTouchKey("arrowright", false)}
+                onPointerLeave={() => setTouchKey("arrowright", false)}
               >▶</button>
             </div>
             <button className="action-button" type="button" onClick={interact}>TALK</button>

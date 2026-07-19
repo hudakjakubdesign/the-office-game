@@ -24,6 +24,7 @@ body {
   background: #0e294b;
   color: var(--paper);
   font-family: var(--font-inter), Arial, Helvetica, sans-serif;
+  overscroll-behavior: none;
 }
 
 button,
@@ -52,7 +53,7 @@ button {
 }
 
 .game-card {
-  width: min(1180px, 100%);
+  width: min(980px, 100%);
   border: 5px solid #492b26;
   background: var(--navy);
   box-shadow:
@@ -134,6 +135,8 @@ button {
   background: #34251f;
   isolation: isolate;
   overflow: hidden;
+  touch-action: none;
+  user-select: none;
 }
 
 .game-stage::after {
@@ -141,9 +144,7 @@ button {
   position: absolute;
   inset: 0;
   pointer-events: none;
-  background:
-    linear-gradient(90deg, rgba(255,255,255,.025), transparent 28%, transparent 72%, rgba(9,20,34,.08)),
-    linear-gradient(180deg, rgba(255,255,255,.035), transparent 35%, rgba(15,25,39,.08));
+  background: none;
   z-index: 2;
 }
 
@@ -151,8 +152,10 @@ canvas {
   display: block;
   width: 100%;
   height: auto;
-  aspect-ratio: 8 / 5;
-  image-rendering: auto;
+  aspect-ratio: 3 / 2;
+  image-rendering: pixelated;
+  touch-action: none;
+  user-select: none;
 }
 
 .start-panel {
@@ -265,8 +268,8 @@ kbd {
   --shirt: #6f8fe8;
   --hair: #32243b;
   position: relative;
-  width: 62px;
-  height: 66px;
+  width: 64px;
+  height: 64px;
   background: #d8e5dd;
   border: 3px solid var(--timber);
   overflow: hidden;
@@ -275,9 +278,9 @@ kbd {
 .atlas-portrait {
   background-color: #f5e4ca;
   background-repeat: no-repeat;
-  background-size: auto 200%;
-  background-position: 15px 0;
-  image-rendering: auto;
+  background-size: 400% 200%;
+  background-position: 0 0;
+  image-rendering: pixelated;
 }
 
 .portrait-hair,
@@ -428,6 +431,13 @@ kbd {
   background: #dbe5e8;
   color: var(--ink);
   touch-action: none;
+  user-select: none;
+}
+
+.action-button {
+  min-width: 74px;
+  min-height: 48px;
+  touch-action: manipulation;
 }
 
 .d-pad .up { grid-column: 2; grid-row: 1; }
@@ -446,18 +456,34 @@ kbd {
 
 @media (max-width: 760px), (pointer: coarse) {
   .game-page {
+    min-height: 100dvh;
     align-content: start;
-    padding: 12px;
+    padding: 8px;
     overflow: auto;
   }
 
+  .game-card {
+    width: 100%;
+  }
+
   .game-header {
-    min-height: 74px;
-    padding: 13px;
+    min-height: 62px;
+    gap: 8px;
+    padding: 9px 10px;
+  }
+
+  .brand-lockup {
+    min-width: 0;
+    gap: 9px;
   }
 
   .grayling-logo {
-    width: 112px;
+    width: clamp(82px, 28vw, 104px);
+  }
+
+  .game-header h1 {
+    font-size: clamp(16px, 5vw, 21px);
+    white-space: nowrap;
   }
 
   .eyebrow {
@@ -467,11 +493,16 @@ kbd {
   .mission {
     min-width: auto;
     gap: 7px;
-    padding: 8px;
+    padding: 6px 7px;
+    box-shadow: 2px 2px 0 #c68e58;
   }
 
   .mission span {
     display: none;
+  }
+
+  .mission strong {
+    font-size: 15px;
   }
 
   .desktop-controls {
@@ -483,30 +514,45 @@ kbd {
   }
 
   .game-footer {
-    min-height: 106px;
+    min-height: 112px;
+    padding: 8px 12px calc(8px + env(safe-area-inset-bottom));
+  }
+
+  .d-pad {
+    width: 140px;
+    height: 96px;
+    grid-template-columns: repeat(3, 44px);
+    grid-template-rows: repeat(2, 44px);
+  }
+
+  .d-pad button {
+    min-width: 44px;
+    min-height: 44px;
   }
 
   .dialogue {
-    left: 10px;
-    right: 10px;
-    bottom: 10px;
-    min-height: 100px;
-    grid-template-columns: 50px 1fr auto;
-    gap: 10px;
-    padding: 10px;
+    left: 6px;
+    right: 6px;
+    bottom: 6px;
+    min-height: 90px;
+    grid-template-columns: 44px 1fr auto;
+    gap: 8px;
+    padding: 8px;
+    box-shadow: 4px 4px 0 #6d8f8d;
   }
 
   .portrait {
-    width: 52px;
-    height: 64px;
+    width: 44px;
+    height: 44px;
   }
 
   .atlas-portrait {
-    background-position: 10px 0;
+    background-position: 0 0;
   }
 
   .dialogue-copy p {
-    font-size: 11px;
+    font-size: clamp(10px, 3vw, 12px);
+    line-height: 1.35;
   }
 
   .speaker-line {
@@ -517,11 +563,35 @@ kbd {
   .speaker-line strong {
     font-size: 14px;
   }
+
+  .dialogue-close {
+    width: 28px;
+    height: 28px;
+    font-size: 20px;
+  }
+
+  .start-panel {
+    width: calc(100% - 20px);
+    padding: 14px;
+  }
+
+  .start-panel h2 {
+    font-size: clamp(21px, 7vw, 30px);
+  }
+
+  .start-panel p {
+    margin-bottom: 14px;
+    font-size: 12px;
+  }
 }
 
 @media (max-width: 480px) {
   .game-page {
     padding: 0;
+  }
+
+  .game-header {
+    padding-top: calc(9px + env(safe-area-inset-top));
   }
 
   .game-card {
@@ -535,6 +605,27 @@ kbd {
 
   .start-panel {
     padding: 18px;
+  }
+}
+
+@media (pointer: coarse) and (orientation: landscape) and (max-height: 600px) {
+  .game-header {
+    min-height: 52px;
+    padding-top: 6px;
+    padding-bottom: 6px;
+  }
+
+  .game-footer {
+    min-height: 82px;
+  }
+
+  .d-pad {
+    height: 76px;
+    grid-template-rows: repeat(2, 36px);
+  }
+
+  .d-pad button {
+    min-height: 36px;
   }
 }
 

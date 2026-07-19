@@ -12,6 +12,7 @@ type Person = {
   y: number;
   shirt: string;
   hair: string;
+  look: "crop" | "long" | "wave";
   message: string;
 };
 
@@ -32,8 +33,9 @@ const people: Person[] = [
     team: "Finance",
     x: 194,
     y: 118,
-    shirt: "#ffc857",
-    hair: "#5a3825",
+    shirt: "#d7a84b",
+    hair: "#50382f",
+    look: "crop",
     message:
       "I keep the numbers moving, from budgets and forecasts to making sure every project is set up for success.",
   },
@@ -43,8 +45,9 @@ const people: Person[] = [
     team: "Design & Marketing",
     x: 287,
     y: 176,
-    shirt: "#f06c9b",
-    hair: "#2e2137",
+    shirt: "#4d7898",
+    hair: "#20243b",
+    look: "long",
     message:
       "We turn strategy into stories people notice, shaping ideas, visuals and campaigns across every channel.",
   },
@@ -54,8 +57,9 @@ const people: Person[] = [
     team: "Brand Portfolio",
     x: 387,
     y: 158,
-    shirt: "#5dd39e",
-    hair: "#c36b3d",
+    shirt: "#76957d",
+    hair: "#b55e3f",
+    look: "wave",
     message:
       "I connect the dots across our brand portfolio, helping each specialist team bring the right expertise to the table.",
   },
@@ -144,38 +148,103 @@ function drawPerson(
   y: number,
   shirt: string,
   hair: string,
+  look: "crop" | "long" | "wave",
   facing: Facing,
   moving: boolean,
   frame: number,
 ) {
-  const step = moving && frame % 16 < 8 ? 1 : 0;
-  ctx.fillStyle = "rgba(28,35,50,.22)";
-  ctx.fillRect(x - 6, y + 8, 12, 3);
+  const phase = moving ? Math.floor(frame / 5) % 4 : 0;
+  const stepLeft = phase === 1 ? 2 : phase === 3 ? -1 : 0;
+  const stepRight = phase === 3 ? 2 : phase === 1 ? -1 : 0;
+  const bob = moving && (phase === 1 || phase === 3) ? -1 : 0;
+  const armSwing = moving && (phase === 1 || phase === 3) ? 2 : 0;
+  const py = y + bob;
+  const outline = "#0a203b";
+  const skin = "#efb18d";
+  const skinShadow = "#d98669";
+  const trousers = "#29496b";
+
+  ctx.fillStyle = "rgba(14,41,75,.23)";
+  ctx.fillRect(x - 9, y + 15, 18, 2);
+  ctx.fillRect(x - 6, y + 17, 12, 1);
+
+  ctx.fillStyle = outline;
+  ctx.fillRect(x - 7 + stepLeft, py + 7, 6, 11);
+  ctx.fillRect(x + 1 + stepRight, py + 7, 6, 11);
+  ctx.fillStyle = trousers;
+  ctx.fillRect(x - 6 + stepLeft, py + 8, 4, 8);
+  ctx.fillRect(x + 2 + stepRight, py + 8, 4, 8);
+  ctx.fillStyle = "#f3ead9";
+  ctx.fillRect(x - 7 + stepLeft, py + 16, 6, 2);
+  ctx.fillRect(x + 1 + stepRight, py + 16, 6, 2);
+
+  ctx.fillStyle = outline;
+  ctx.fillRect(x - 8, py - 2, 16, 12);
+  ctx.fillRect(x - 10, py, 3, 10);
+  ctx.fillRect(x + 7, py, 3, 10);
+  ctx.fillStyle = shirt;
+  ctx.fillRect(x - 7, py - 1, 14, 10);
+  ctx.fillStyle = "rgba(255,255,255,.28)";
+  ctx.fillRect(x - 5, py, 3, 7);
+  ctx.fillStyle = "#fff6e7";
+  ctx.fillRect(x + 2, py, 3, 3);
+  ctx.fillStyle = "#0e294b";
+  ctx.fillRect(x + 3, py + 1, 1, 1);
+
+  ctx.fillStyle = outline;
+  ctx.fillRect(x - 11, py + 1 + armSwing, 4, 8);
+  ctx.fillRect(x + 7, py + 1 + (armSwing ? 0 : 2), 4, 8);
+  ctx.fillStyle = skin;
+  ctx.fillRect(x - 10, py + 3 + armSwing, 2, 5);
+  ctx.fillRect(x + 8, py + 3 + (armSwing ? 0 : 2), 2, 5);
+  ctx.fillStyle = skinShadow;
+  ctx.fillRect(x - 10, py + 7 + armSwing, 2, 1);
+  ctx.fillRect(x + 8, py + 7 + (armSwing ? 0 : 2), 2, 1);
+
+  ctx.fillStyle = outline;
+  ctx.fillRect(x - 7, py - 14, 14, 13);
+  ctx.fillStyle = skin;
+  ctx.fillRect(x - 6, py - 12, 12, 10);
+  ctx.fillStyle = skinShadow;
+  ctx.fillRect(x - 6, py - 4, 12, 2);
+  ctx.fillRect(x - 7, py - 9, 2, 4);
+  ctx.fillRect(x + 5, py - 9, 2, 4);
 
   ctx.fillStyle = hair;
-  ctx.fillRect(x - 5, y - 9, 10, 7);
-  ctx.fillRect(x - 6, y - 6, 12, 5);
-  ctx.fillStyle = "#efb38f";
-  ctx.fillRect(x - 5, y - 5, 10, 8);
-
-  if (facing !== "up") {
-    ctx.fillStyle = "#25344d";
-    const eyeX = facing === "left" ? x - 3 : facing === "right" ? x + 2 : x - 3;
-    ctx.fillRect(eyeX, y - 2, 1, 1);
-    if (facing === "down") ctx.fillRect(x + 2, y - 2, 1, 1);
+  if (look === "long") {
+    ctx.fillRect(x - 7, py - 15, 14, 5);
+    ctx.fillRect(x - 8, py - 12, 3, 12);
+    ctx.fillRect(x + 5, py - 12, 3, 12);
+    ctx.fillRect(x - 5, py - 14, 4, 2);
+  } else if (look === "wave") {
+    ctx.fillRect(x - 7, py - 15, 12, 4);
+    ctx.fillRect(x - 8, py - 13, 4, 4);
+    ctx.fillRect(x + 3, py - 14, 5, 4);
+    ctx.fillRect(x - 3, py - 16, 6, 2);
+  } else {
+    ctx.fillRect(x - 7, py - 15, 14, 5);
+    ctx.fillRect(x - 7, py - 11, 3, 3);
+    ctx.fillRect(x + 4, py - 12, 3, 2);
   }
 
-  ctx.fillStyle = shirt;
-  ctx.fillRect(x - 6, y + 3, 12, 9);
-  ctx.fillStyle = "#f1bf9f";
-  ctx.fillRect(x - 8, y + 4, 2, 7);
-  ctx.fillRect(x + 6, y + 4, 2, 7);
-  ctx.fillStyle = "#334767";
-  ctx.fillRect(x - 5, y + 12, 4, 5 + step);
-  ctx.fillRect(x + 1, y + 12, 4, 6 - step);
-  ctx.fillStyle = "#172033";
-  ctx.fillRect(x - 6, y + 16 + step, 5, 2);
-  ctx.fillRect(x + 1, y + 17 - step, 5, 2);
+  if (facing !== "up") {
+    ctx.fillStyle = outline;
+    if (facing === "left") {
+      ctx.fillRect(x - 4, py - 8, 2, 2);
+      ctx.fillRect(x - 6, py - 5, 2, 1);
+    } else if (facing === "right") {
+      ctx.fillRect(x + 2, py - 8, 2, 2);
+      ctx.fillRect(x + 4, py - 5, 2, 1);
+    } else {
+      const blink = !moving && frame % 140 > 134;
+      ctx.fillRect(x - 4, py - 8, 2, blink ? 1 : 2);
+      ctx.fillRect(x + 2, py - 8, 2, blink ? 1 : 2);
+      ctx.fillRect(x - 1, py - 4, 3, 1);
+    }
+  } else {
+    ctx.fillStyle = hair;
+    ctx.fillRect(x - 6, py - 11, 12, 8);
+  }
 }
 
 function drawOffice(
@@ -187,21 +256,21 @@ function drawOffice(
   ctx.imageSmoothingEnabled = false;
   ctx.clearRect(0, 0, WIDTH, HEIGHT);
 
-  ctx.fillStyle = "#1e2941";
+  ctx.fillStyle = "#0e294b";
   ctx.fillRect(0, 0, WIDTH, HEIGHT);
-  ctx.fillStyle = "#263754";
+  ctx.fillStyle = "#1b456f";
   for (let x = 0; x < WIDTH; x += 12) {
     ctx.fillRect(x, 0, 6, 8);
     ctx.fillRect(x + 6, 292, 6, 8);
   }
 
-  ctx.fillStyle = "#f0d8b4";
+  ctx.fillStyle = "#fff6e7";
   ctx.fillRect(12, 28, 456, 248);
-  ctx.fillStyle = "#d5a36f";
+  ctx.fillStyle = "#ead9bd";
   ctx.fillRect(12, 28, 456, 21);
-  ctx.fillStyle = "#8f5f4b";
+  ctx.fillStyle = "#0e294b";
   ctx.fillRect(12, 47, 456, 7);
-  ctx.fillStyle = "#263754";
+  ctx.fillStyle = "#0e294b";
   ctx.fillRect(12, 28, 16, 248);
   ctx.fillRect(452, 28, 16, 248);
   ctx.fillRect(12, 264, 208, 12);
@@ -209,29 +278,43 @@ function drawOffice(
 
   for (let y = 54; y < 264; y += 12) {
     for (let x = 28; x < 452; x += 12) {
-      ctx.fillStyle = (x / 12 + y / 12) % 2 === 0 ? "#e8cda4" : "#edcfaa";
+      ctx.fillStyle = (x / 12 + y / 12) % 2 === 0 ? "#eadcc7" : "#f2e6d3";
       ctx.fillRect(x, y, 12, 12);
-      ctx.fillStyle = "rgba(157,111,80,.11)";
+      ctx.fillStyle = "rgba(14,41,75,.08)";
       ctx.fillRect(x, y + 11, 12, 1);
     }
   }
 
-  ctx.fillStyle = "#82aab5";
+  ctx.fillStyle = "#0e294b";
+  ctx.fillRect(171, 184, 148, 58);
+  ctx.fillStyle = "#173f68";
+  ctx.fillRect(176, 189, 138, 48);
+  ctx.fillStyle = "#fff6e7";
+  for (let x = 180; x < 310; x += 18) {
+    ctx.fillRect(x, 193, 9, 4);
+    ctx.fillRect(x + 7, 197, 9, 4);
+    ctx.fillRect(x, 225, 9, 4);
+    ctx.fillRect(x + 7, 221, 9, 4);
+  }
+  drawPixelText(ctx, "CREATE", 245, 207, "#fff6e7", "center");
+  drawPixelText(ctx, "ADVANTAGE", 245, 216, "#fff6e7", "center");
+
+  ctx.fillStyle = "#7591a7";
   ctx.fillRect(145, 54, 4, 210);
   ctx.fillRect(340, 54, 4, 210);
-  ctx.fillStyle = "#eef4e8";
+  ctx.fillStyle = "#fff9ef";
   ctx.fillRect(149, 54, 191, 4);
 
-  ctx.fillStyle = "#355371";
+  ctx.fillStyle = "#0e294b";
   ctx.fillRect(184, 31, 112, 15);
-  drawPixelText(ctx, "GRAYLING OFFICE", 240, 39, "#fff6d8", "center");
+  drawPixelText(ctx, "GRAYLING  /  CREATING ADVANTAGE", 240, 39, "#fff6e7", "center");
 
-  ctx.fillStyle = "#92c9c3";
+  ctx.fillStyle = "#94b3c5";
   ctx.fillRect(35, 32, 37, 12);
   ctx.fillRect(81, 32, 37, 12);
   ctx.fillRect(362, 32, 37, 12);
   ctx.fillRect(408, 32, 30, 12);
-  ctx.fillStyle = "#dff3ee";
+  ctx.fillStyle = "#eaf3f5";
   ctx.fillRect(38, 35, 31, 3);
   ctx.fillRect(84, 35, 31, 3);
   ctx.fillRect(365, 35, 31, 3);
@@ -265,10 +348,10 @@ function drawOffice(
   ctx.fillRect(76, 126, 5, 8);
   ctx.fillRect(126, 126, 5, 8);
 
-  drawDesk(ctx, 159, 68, "#5ec4b6");
-  drawDesk(ctx, 256, 68, "#f28b78");
-  drawDesk(ctx, 159, 137, "#ffc857");
-  drawDesk(ctx, 255, 137, "#9d83dc");
+  drawDesk(ctx, 159, 68, "#0e294b");
+  drawDesk(ctx, 256, 68, "#4d7898");
+  drawDesk(ctx, 159, 137, "#d7a84b");
+  drawDesk(ctx, 255, 137, "#76957d");
 
   ctx.fillStyle = "#8097a8";
   ctx.fillRect(350, 76, 79, 64);
@@ -303,7 +386,7 @@ function drawOffice(
   for (let shelf = 202; shelf < 240; shelf += 12) {
     ctx.fillRect(404, shelf, 30, 3);
   }
-  const bookColors = ["#f06c9b", "#5dd39e", "#ffc857", "#7f9de1"];
+  const bookColors = ["#0e294b", "#76957d", "#d7a84b", "#4d7898"];
   bookColors.forEach((color, index) => {
     ctx.fillStyle = color;
     ctx.fillRect(406 + index * 7, 193 + (index % 2) * 12, 4, 9);
@@ -323,17 +406,17 @@ function drawOffice(
   drawPixelText(ctx, "LIFT", 240, 284, "#d9e8e4", "center");
 
   people.forEach((person) => {
-    drawPerson(ctx, person.x, person.y, person.shirt, person.hair, "down", false, frame);
+    drawPerson(ctx, person.x, person.y, person.shirt, person.hair, person.look, "down", false, frame);
     if (!visited.has(person.id)) {
       ctx.fillStyle = "#fff4d1";
-      ctx.fillRect(person.x - 4, person.y - 24, 8, 9);
-      ctx.fillStyle = "#f06c68";
-      ctx.fillRect(person.x - 1, person.y - 22, 2, 4);
-      ctx.fillRect(person.x - 1, person.y - 17, 2, 1);
+      ctx.fillRect(person.x - 5, person.y - 34, 10, 10);
+      ctx.fillStyle = "#0e294b";
+      ctx.fillRect(person.x - 1, person.y - 32, 2, 5);
+      ctx.fillRect(person.x - 1, person.y - 25, 2, 1);
     } else {
-      ctx.fillStyle = "#5dd39e";
-      ctx.fillRect(person.x - 5, person.y - 23, 10, 8);
-      drawPixelText(ctx, "✓", person.x, person.y - 19, "#163d38", "center");
+      ctx.fillStyle = "#76957d";
+      ctx.fillRect(person.x - 5, person.y - 34, 10, 9);
+      drawPixelText(ctx, "✓", person.x, person.y - 29, "#163d38", "center");
     }
   });
 
@@ -341,8 +424,9 @@ function drawOffice(
     ctx,
     Math.round(player.x),
     Math.round(player.y),
-    "#6f8fe8",
+    "#386b91",
     "#d56a3d",
+    "wave",
     player.facing,
     player.moving,
     frame,
@@ -493,14 +577,16 @@ export default function Home() {
       <section className="game-card" aria-label="Grayling office game prototype">
         <header className="game-header">
           <div className="brand-lockup">
-            <span className="brand-mark" aria-hidden="true">
-              <i />
-              <i />
-              <i />
-            </span>
+            {/* Grayling's official logo is used here for the client prototype. */}
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              className="grayling-logo"
+              src="https://grayling.com/wp-content/uploads/2023/11/GraylingCreatingAdvantage_Logo_Blue.png"
+              alt="Grayling, creating advantage"
+            />
             <div>
-              <p className="eyebrow">PIXEL OFFICE  /  PROTOTYPE 01</p>
-              <h1>Meet the office</h1>
+              <p className="eyebrow">PIXEL OFFICE  /  EXPERIENCE 01</p>
+              <h1>Create advantage</h1>
             </div>
           </div>
           <div className="mission" aria-live="polite">
@@ -519,9 +605,9 @@ export default function Home() {
 
           {!started && (
             <div className="start-panel">
-              <span className="tiny-label">WELCOME TO THE OFFICE</span>
-              <h2>Your first day starts here.</h2>
-              <p>Walk around and meet the three teams waiting inside.</p>
+              <span className="tiny-label">WELCOME TO GRAYLING</span>
+              <h2>Ready to create advantage?</h2>
+              <p>Explore the office and meet three teams shaping the work.</p>
               <button type="button" onClick={() => setStarted(true)}>
                 Enter the office
               </button>

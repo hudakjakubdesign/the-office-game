@@ -1,6 +1,6 @@
-# Grayling Pixel Office
+# The Office Game
 
-A playable top-down pixel-art office demo. Walk through a compact corporate office and meet colleagues from Finance, Design & Marketing, and Brand Portfolio.
+A playable Grayling-branded top-down pixel-art office demo. Walk through a compact corporate office and meet colleagues from Finance, Design & Marketing, and Brand Portfolio.
 
 ## Run locally
 

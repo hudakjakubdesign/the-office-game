@@ -303,6 +303,7 @@ function drawOffice(
   frame: number,
   sprites: Partial<Record<SpriteId, HTMLImageElement>>,
 ) {
+  ctx.setTransform(2, 0, 0, 2, 0, 0);
   ctx.imageSmoothingEnabled = false;
   ctx.clearRect(0, 0, WIDTH, HEIGHT);
 
@@ -495,6 +496,11 @@ function drawOffice(
   ctx.fillStyle = "#d9e8e4";
   ctx.fillRect(238, 260, 4, 5);
   drawPixelText(ctx, "LIFT", 240, 284, "#d9e8e4", "center");
+
+  // Keep the office's crisp pixel construction, while rendering the supplied
+  // character illustrations with smooth high-resolution scaling.
+  ctx.imageSmoothingEnabled = true;
+  ctx.imageSmoothingQuality = "high";
 
   people.forEach((person) => {
     drawAtlasPerson(
@@ -722,8 +728,8 @@ export default function Home() {
         <div className="game-stage">
           <canvas
             ref={canvasRef}
-            width={WIDTH}
-            height={HEIGHT}
+            width={WIDTH * 2}
+            height={HEIGHT * 2}
             aria-label="A top-down pixel art office with desks, a kitchen, a meeting room and three colleagues"
           />
 

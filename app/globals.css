@@ -155,8 +155,7 @@ canvas {
   width: 100%;
   height: auto;
   aspect-ratio: 8 / 5;
-  image-rendering: pixelated;
-  image-rendering: crisp-edges;
+  image-rendering: auto;
 }
 
 .start-panel {
@@ -281,7 +280,7 @@ kbd {
   background-repeat: no-repeat;
   background-size: 400% 200%;
   background-position: 0 0;
-  image-rendering: pixelated;
+  image-rendering: auto;
 }
 
 .portrait-hair,

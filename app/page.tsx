@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 
 type Facing = "up" | "down" | "left" | "right";
+type SpriteId = "heather" | "nathan" | "alice" | "player";
 
 type Person = {
   id: string;
@@ -13,6 +14,7 @@ type Person = {
   shirt: string;
   hair: string;
   look: "crop" | "long" | "wave";
+  sprite: Exclude<SpriteId, "player">;
   message: string;
 };
 
@@ -28,38 +30,41 @@ const HEIGHT = 300;
 
 const people: Person[] = [
   {
-    id: "finance",
-    name: "Alex",
-    team: "Finance",
-    x: 194,
-    y: 118,
-    shirt: "#d7a84b",
-    hair: "#50382f",
-    look: "crop",
+    id: "heather",
+    name: "Heather Blundell",
+    team: "UK CEO",
+    x: 240,
+    y: 214,
+    shirt: "#1d2029",
+    hair: "#f2bd55",
+    look: "long",
+    sprite: "heather",
     message:
-      "I keep the numbers moving, from budgets and forecasts to making sure every project is set up for success.",
+      "Welcome to Grayling. I’m Heather, UK CEO. Come in, explore the office and meet the teams creating advantage for our clients every day.",
   },
   {
     id: "creative",
-    name: "Maya",
+    name: "Nathan Kemp",
     team: "Design & Marketing",
     x: 287,
     y: 176,
-    shirt: "#4d7898",
-    hair: "#20243b",
-    look: "long",
+    shirt: "#66704a",
+    hair: "#c79648",
+    look: "crop",
+    sprite: "nathan",
     message:
       "We turn strategy into stories people notice, shaping ideas, visuals and campaigns across every channel.",
   },
   {
     id: "portfolio",
-    name: "Sam",
+    name: "Alice Newsham",
     team: "Brand Portfolio",
     x: 387,
     y: 158,
-    shirt: "#76957d",
-    hair: "#b55e3f",
-    look: "wave",
+    shirt: "#74706c",
+    hair: "#2c2424",
+    look: "long",
+    sprite: "alice",
     message:
       "I connect the dots across our brand portfolio, helping each specialist team bring the right expertise to the table.",
   },
@@ -247,11 +252,56 @@ function drawPerson(
   }
 }
 
+function drawAtlasPerson(
+  ctx: CanvasRenderingContext2D,
+  image: HTMLImageElement | undefined,
+  x: number,
+  y: number,
+  facing: Facing,
+  moving: boolean,
+  frame: number,
+  fallback: Pick<Person, "shirt" | "hair" | "look">,
+) {
+  ctx.fillStyle = "rgba(54, 35, 27, .28)";
+  ctx.fillRect(x - 10, y + 15, 20, 3);
+
+  if (!image?.complete || !image.naturalWidth) {
+    drawPerson(ctx, x, y, fallback.shirt, fallback.hair, fallback.look, facing, moving, frame);
+    return;
+  }
+
+  const walking = moving && Math.floor(frame / 7) % 2 === 1;
+  const index = facing === "down"
+    ? (walking ? 1 : 0)
+    : facing === "up"
+      ? (walking ? 3 : 2)
+      : facing === "left"
+        ? (walking ? 5 : 4)
+        : (walking ? 7 : 6);
+  const cellWidth = image.naturalWidth / 4;
+  const cellHeight = image.naturalHeight / 2;
+  const sourceX = (index % 4) * cellWidth;
+  const sourceY = Math.floor(index / 4) * cellHeight;
+
+  ctx.drawImage(
+    image,
+    sourceX,
+    sourceY,
+    cellWidth,
+    cellHeight,
+    Math.round(x - 22),
+    Math.round(y - 45),
+    44,
+    62,
+  );
+}
+
 function drawOffice(
   ctx: CanvasRenderingContext2D,
   player: Player,
   visited: Set<string>,
   frame: number,
+  sprites: Partial<Record<SpriteId, HTMLImageElement>>,
 ) {
   ctx.imageSmoothingEnabled = false;
   ctx.clearRect(0, 0, WIDTH, HEIGHT);
@@ -264,11 +314,11 @@ function drawOffice(
     ctx.fillRect(x + 6, 292, 6, 8);
   }
 
-  ctx.fillStyle = "#fff6e7";
+  ctx.fillStyle = "#f8ead3";
   ctx.fillRect(12, 28, 456, 248);
-  ctx.fillStyle = "#ead9bd";
+  ctx.fillStyle = "#f0d5ad";
   ctx.fillRect(12, 28, 456, 21);
-  ctx.fillStyle = "#0e294b";
+  ctx.fillStyle = "#6e3e2d";
   ctx.fillRect(12, 47, 456, 7);
   ctx.fillStyle = "#0e294b";
   ctx.fillRect(12, 28, 16, 248);
@@ -276,12 +326,15 @@ function drawOffice(
   ctx.fillRect(12, 264, 208, 12);
   ctx.fillRect(260, 264, 208, 12);
 
-  for (let y = 54; y < 264; y += 12) {
-    for (let x = 28; x < 452; x += 12) {
-      ctx.fillStyle = (x / 12 + y / 12) % 2 === 0 ? "#eadcc7" : "#f2e6d3";
-      ctx.fillRect(x, y, 12, 12);
-      ctx.fillStyle = "rgba(14,41,75,.08)";
-      ctx.fillRect(x, y + 11, 12, 1);
+  for (let y = 54; y < 264; y += 10) {
+    for (let x = 28; x < 452; x += 32) {
+      const offset = ((y - 54) / 10) % 2 ? 16 : 0;
+      ctx.fillStyle = ((x + y) / 10) % 2 > 1 ? "#c99162" : "#d8a574";
+      ctx.fillRect(x - offset, y, 31, 9);
+      ctx.fillStyle = "#a96f4f";
+      ctx.fillRect(x - offset, y + 8, 31, 1);
+      ctx.fillStyle = "rgba(255,239,205,.34)";
+      ctx.fillRect(x - offset + 2, y + 1, 17, 1);
     }
   }
 
@@ -309,23 +362,29 @@ function drawOffice(
   ctx.fillRect(184, 31, 112, 15);
   drawPixelText(ctx, "GRAYLING  /  CREATING ADVANTAGE", 240, 39, "#fff6e7", "center");
 
-  ctx.fillStyle = "#94b3c5";
+  ctx.fillStyle = "#527d8d";
   ctx.fillRect(35, 32, 37, 12);
   ctx.fillRect(81, 32, 37, 12);
   ctx.fillRect(362, 32, 37, 12);
   ctx.fillRect(408, 32, 30, 12);
-  ctx.fillStyle = "#eaf3f5";
+  ctx.fillStyle = "#bfe3e2";
   ctx.fillRect(38, 35, 31, 3);
   ctx.fillRect(84, 35, 31, 3);
   ctx.fillRect(365, 35, 31, 3);
   ctx.fillRect(411, 35, 24, 3);
+  ctx.fillStyle = "#f7cc72";
+  ctx.fillRect(42, 36, 7, 2);
+  ctx.fillRect(88, 36, 8, 2);
+  ctx.fillRect(369, 36, 8, 2);
 
-  ctx.fillStyle = "#6b4f42";
+  ctx.fillStyle = "#315c58";
   ctx.fillRect(30, 53, 112, 25);
-  ctx.fillStyle = "#c88759";
+  ctx.fillStyle = "#6ea09a";
   ctx.fillRect(30, 53, 112, 7);
-  ctx.fillStyle = "#e5b87f";
+  ctx.fillStyle = "#b9d4c4";
   for (let x = 34; x < 138; x += 18) ctx.fillRect(x, 62, 14, 12);
+  ctx.fillStyle = "#d29b53";
+  for (let x = 45; x < 138; x += 18) ctx.fillRect(x, 67, 2, 2);
   ctx.fillStyle = "#6d91a1";
   ctx.fillRect(31, 79, 25, 40);
   ctx.fillStyle = "#cfe8df";
@@ -352,6 +411,21 @@ function drawOffice(
   drawDesk(ctx, 256, 68, "#4d7898");
   drawDesk(ctx, 159, 137, "#d7a84b");
   drawDesk(ctx, 255, 137, "#76957d");
+
+  [[196, 103], [293, 103], [196, 172], [292, 172]].forEach(([x, y], index) => {
+    ctx.fillStyle = "#29354a";
+    ctx.fillRect(x - 7, y, 14, 10);
+    ctx.fillStyle = index % 2 ? "#466d73" : "#56425a";
+    ctx.fillRect(x - 5, y + 2, 10, 6);
+    ctx.fillStyle = "#19263a";
+    ctx.fillRect(x - 1, y + 10, 3, 6);
+  });
+  ctx.fillStyle = "#f4d791";
+  ctx.fillRect(218, 73, 5, 4);
+  ctx.fillRect(315, 142, 5, 4);
+  ctx.fillStyle = "#3c6d6b";
+  ctx.fillRect(171, 73, 9, 5);
+  ctx.fillRect(267, 142, 9, 5);
 
   ctx.fillStyle = "#8097a8";
   ctx.fillRect(350, 76, 79, 64);
@@ -397,6 +471,23 @@ function drawOffice(
   drawPlant(ctx, 440, 249);
   drawPlant(ctx, 46, 246);
 
+  ctx.fillStyle = "#704936";
+  ctx.fillRect(83, 143, 45, 34);
+  ctx.fillStyle = "#fff0cb";
+  ctx.fillRect(87, 147, 37, 26);
+  ctx.fillStyle = "#d16f56";
+  ctx.fillRect(91, 151, 12, 14);
+  ctx.fillStyle = "#517e80";
+  ctx.fillRect(105, 156, 14, 11);
+  ctx.fillStyle = "#f0c760";
+  ctx.fillRect(101, 150, 5, 5);
+  ctx.fillStyle = "#654536";
+  ctx.fillRect(61, 188, 3, 45);
+  ctx.fillStyle = "#f4cc70";
+  ctx.fillRect(54, 183, 17, 8);
+  ctx.fillStyle = "rgba(255,221,145,.25)";
+  ctx.fillRect(48, 191, 29, 27);
+
   ctx.fillStyle = "#48617d";
   ctx.fillRect(220, 264, 40, 8);
   ctx.fillStyle = "#8295a7";
@@ -406,30 +497,38 @@ function drawOffice(
   drawPixelText(ctx, "LIFT", 240, 284, "#d9e8e4", "center");
 
   people.forEach((person) => {
-    drawPerson(ctx, person.x, person.y, person.shirt, person.hair, person.look, "down", false, frame);
+    drawAtlasPerson(
+      ctx,
+      sprites[person.sprite],
+      person.x,
+      person.y,
+      "down",
+      false,
+      frame,
+      person,
+    );
     if (!visited.has(person.id)) {
       ctx.fillStyle = "#fff4d1";
-      ctx.fillRect(person.x - 5, person.y - 34, 10, 10);
+      ctx.fillRect(person.x - 5, person.y - 55, 10, 10);
       ctx.fillStyle = "#0e294b";
-      ctx.fillRect(person.x - 1, person.y - 32, 2, 5);
-      ctx.fillRect(person.x - 1, person.y - 25, 2, 1);
+      ctx.fillRect(person.x - 1, person.y - 53, 2, 5);
+      ctx.fillRect(person.x - 1, person.y - 46, 2, 1);
     } else {
       ctx.fillStyle = "#76957d";
-      ctx.fillRect(person.x - 5, person.y - 34, 10, 9);
-      drawPixelText(ctx, "✓", person.x, person.y - 29, "#163d38", "center");
+      ctx.fillRect(person.x - 5, person.y - 55, 10, 9);
+      drawPixelText(ctx, "✓", person.x, person.y - 50, "#163d38", "center");
     }
   });
 
-  drawPerson(
+  drawAtlasPerson(
     ctx,
+    sprites.player,
     Math.round(player.x),
     Math.round(player.y),
-    "#386b91",
-    "#d56a3d",
-    "wave",
     player.facing,
     player.moving,
     frame,
+    { shirt: "#386b91", hair: "#d56a3d", look: "wave" },
   );
 }
 
@@ -446,6 +545,7 @@ function isBlocked(x: number, y: number) {
 
 export default function Home() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const spritesRef = useRef<Partial<Record<SpriteId, HTMLImageElement>>>({});
   const keysRef = useRef<Set<string>>(new Set());
   const playerRef = useRef<Player>({
     x: 240,
@@ -459,6 +559,23 @@ export default function Home() {
   const [dialogue, setDialogue] = useState<Person | null>(null);
   const [visited, setVisited] = useState<string[]>([]);
   const [started, setStarted] = useState(false);
+
+  useEffect(() => {
+    const files: Record<SpriteId, string> = {
+      heather: "heather-blundell-sprites.png",
+      nathan: "nathan-kemp-sprites.png",
+      alice: "alice-newsham-sprites.png",
+      player: "visitor-sprites.png",
+    };
+
+    (Object.entries(files) as [SpriteId, string][]).forEach(([id, filename]) => {
+      const image = new Image();
+      image.src = `./${filename}`;
+      image.onload = () => {
+        spritesRef.current[id] = image;
+      };
+    });
+  }, []);
 
   useEffect(() => {
     visitedRef.current = new Set(visited);
@@ -539,7 +656,7 @@ export default function Home() {
         setNearby(closePerson ?? null);
       }
 
-      drawOffice(ctx, player, visitedRef.current, frame);
+      drawOffice(ctx, player, visitedRef.current, frame, spritesRef.current);
       animationFrame = requestAnimationFrame(update);
     };
 
@@ -570,6 +687,13 @@ export default function Home() {
   const setTouchKey = (key: string, active: boolean) => {
     if (active) keysRef.current.add(key);
     else keysRef.current.delete(key);
+  };
+
+  const beginTour = () => {
+    const heather = people[0];
+    setStarted(true);
+    setDialogue(heather);
+    setVisited([heather.id]);
   };
 
   return (
@@ -608,7 +732,7 @@ export default function Home() {
               <span className="tiny-label">WELCOME TO GRAYLING</span>
               <h2>Ready to create advantage?</h2>
               <p>Explore the office and meet three teams shaping the work.</p>
-              <button type="button" onClick={() => setStarted(true)}>
+              <button type="button" onClick={beginTour}>
                 Enter the office
               </button>
             </div>
@@ -622,11 +746,18 @@ export default function Home() {
 
           {dialogue && (
             <div className="dialogue" role="dialog" aria-label={`Conversation with ${dialogue.name}`}>
-              <div className="portrait" style={{ "--shirt": dialogue.shirt, "--hair": dialogue.hair } as React.CSSProperties}>
-                <span className="portrait-hair" />
-                <span className="portrait-face" />
-                <span className="portrait-shirt" />
-              </div>
+              <div
+                className="portrait atlas-portrait"
+                style={{
+                  "--shirt": dialogue.shirt,
+                  "--hair": dialogue.hair,
+                  backgroundImage: `url("./${dialogue.sprite === "heather"
+                    ? "heather-blundell-sprites.png"
+                    : dialogue.sprite === "nathan"
+                      ? "nathan-kemp-sprites.png"
+                      : "alice-newsham-sprites.png"}")`,
+                } as React.CSSProperties}
+              />
               <div className="dialogue-copy">
                 <div className="speaker-line">
                   <strong>{dialogue.name}</strong>

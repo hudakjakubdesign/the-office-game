@@ -3,10 +3,11 @@
 :root {
   --ink: #0e294b;
   --navy: #0e294b;
-  --paper: #fff6e7;
-  --coral: #d7a84b;
-  --mint: #76957d;
-  --sky: #94b3c5;
+  --paper: #fff2d5;
+  --coral: #e6a84c;
+  --mint: #557f72;
+  --sky: #78a6ae;
+  --timber: #6f412f;
 }
 
 * {
@@ -43,17 +44,20 @@ button {
   overflow: hidden;
   background-color: #0e294b;
   background-image:
-    linear-gradient(rgba(255, 246, 231, 0.04) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255, 246, 231, 0.04) 1px, transparent 1px);
+    radial-gradient(circle at 18% 20%, rgba(232, 174, 72, 0.12), transparent 23%),
+    radial-gradient(circle at 82% 74%, rgba(78, 137, 133, 0.16), transparent 28%),
+    linear-gradient(rgba(255, 246, 231, 0.035) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 246, 231, 0.035) 1px, transparent 1px);
   background-size: 24px 24px;
 }
 
 .game-card {
   width: min(1180px, 100%);
-  border: 4px solid #071b33;
+  border: 5px solid #492b26;
   background: var(--navy);
   box-shadow:
-    0 0 0 4px #fff6e7,
+    0 0 0 4px #d7a468,
+    0 0 0 8px #fff2d5,
     0 24px 70px rgba(3, 8, 18, 0.5);
 }
 
@@ -64,8 +68,8 @@ button {
   justify-content: space-between;
   gap: 24px;
   padding: 17px 22px;
-  border-bottom: 4px solid #0e294b;
-  background: #fff6e7;
+  border-bottom: 5px solid var(--timber);
+  background: linear-gradient(180deg, #fff7e7 0%, #f5dfbc 100%);
   color: var(--ink);
 }
 
@@ -107,9 +111,9 @@ button {
   justify-content: space-between;
   gap: 18px;
   padding: 10px 12px;
-  border: 3px solid var(--ink);
-  background: #fffaf0;
-  box-shadow: 4px 4px 0 #94b3c5;
+  border: 3px solid var(--timber);
+  background: #fff5df;
+  box-shadow: 4px 4px 0 #c68e58;
   font-family: var(--font-geist-mono), monospace;
   text-transform: uppercase;
 }
@@ -127,7 +131,7 @@ button {
 .game-stage {
   position: relative;
   width: 100%;
-  background: #111a2c;
+  background: #34251f;
   overflow: hidden;
 }
 
@@ -163,11 +167,11 @@ canvas {
   width: min(390px, calc(100% - 36px));
   transform: translate(-50%, -50%);
   padding: clamp(20px, 4vw, 34px);
-  border: 4px solid #111a2c;
-  background: #fff6e7;
+  border: 4px solid var(--timber);
+  background: #fff0d1;
   color: var(--ink);
   text-align: center;
-  box-shadow: 8px 8px 0 #94b3c5;
+  box-shadow: 8px 8px 0 #6d8f8d;
 }
 
 .start-panel h2 {
@@ -220,8 +224,8 @@ canvas {
 
 .talk-prompt {
   padding: 8px 12px;
-  border: 3px solid #111a2c;
-  background: #fff6e7;
+  border: 3px solid var(--timber);
+  background: #fff0d1;
   color: var(--ink);
   cursor: pointer;
   box-shadow: 4px 4px 0 #111a2c;
@@ -255,10 +259,10 @@ kbd {
   align-items: center;
   gap: 18px;
   padding: 16px 18px;
-  border: 4px solid #111a2c;
-  background: #fff6e7;
+  border: 4px solid var(--timber);
+  background: #fff0d1;
   color: var(--ink);
-  box-shadow: 7px 7px 0 var(--sky);
+  box-shadow: 7px 7px 0 #6d8f8d;
 }
 
 .portrait {
@@ -268,8 +272,16 @@ kbd {
   width: 62px;
   height: 66px;
   background: #d8e5dd;
-  border: 3px solid var(--ink);
+  border: 3px solid var(--timber);
   overflow: hidden;
+}
+
+.atlas-portrait {
+  background-color: #f5e4ca;
+  background-repeat: no-repeat;
+  background-size: 400% 200%;
+  background-position: 0 0;
+  image-rendering: pixelated;
 }
 
 .portrait-hair,

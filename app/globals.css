@@ -417,13 +417,19 @@ kbd {
 }
 
 .game-footer {
-  display: flex;
+  display: none;
   align-items: center;
   justify-content: center;
   min-height: 62px;
   padding: 12px 18px;
   border-top: 4px solid #0e1728;
   background: #0e294b;
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 24px;
 }
 
 .desktop-controls {
@@ -549,11 +555,16 @@ kbd {
     display: none;
   }
 
+  .header-actions {
+    gap: 0;
+  }
+
   .touch-controls {
     display: flex;
   }
 
   .game-footer {
+    display: flex;
     min-height: 112px;
     padding: 8px 12px calc(8px + env(safe-area-inset-bottom));
   }
@@ -651,7 +662,7 @@ kbd {
 /* A landscape game is a self-contained viewport, not a scrolling page.  This
    deliberately does not depend on pointer detection: a few Android browsers
    report an imprecise pointer capability while still being a phone. */
-@media (orientation: landscape) and (max-height: 900px) {
+@media (orientation: landscape) and (max-height: 900px) and (max-width: 1100px) {
   html,
   body {
     width: 100%;

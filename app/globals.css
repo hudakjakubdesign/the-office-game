@@ -16,6 +16,7 @@
 
 html,
 body {
+  height: 100%;
   min-height: 100%;
 }
 
@@ -25,6 +26,7 @@ body {
   color: var(--paper);
   font-family: var(--font-inter), Arial, Helvetica, sans-serif;
   overscroll-behavior: none;
+  touch-action: manipulation;
 }
 
 button,
@@ -464,6 +466,7 @@ kbd {
   color: var(--ink);
   touch-action: none;
   user-select: none;
+  -webkit-user-select: none;
 }
 
 .action-button {
@@ -486,7 +489,7 @@ kbd {
   text-align: center;
 }
 
-@media (max-width: 760px), (pointer: coarse) {
+@media (max-width: 760px), (any-pointer: coarse) {
   .game-page {
     min-height: 100dvh;
     align-content: start;
@@ -645,7 +648,7 @@ kbd {
   }
 }
 
-@media (orientation: landscape) and (hover: none) and (max-height: 900px) {
+@media (orientation: landscape) and (any-pointer: coarse) and (max-height: 900px) {
   .game-page {
     height: 100dvh;
     min-height: 0;

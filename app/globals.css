@@ -87,6 +87,17 @@ button {
   object-fit: contain;
 }
 
+.grayling-wordmark {
+  display: block;
+  padding-top: 5px;
+  color: var(--ink);
+  font-family: var(--font-geist-mono), monospace;
+  font-size: clamp(25px, 3vw, 36px);
+  font-weight: 900;
+  letter-spacing: 0.12em;
+  line-height: 1;
+}
+
 .eyebrow,
 .tiny-label {
   margin: 0 0 5px;
@@ -624,23 +635,105 @@ kbd {
 }
 
 @media (pointer: coarse) and (orientation: landscape) and (max-height: 600px) {
+  .game-page {
+    height: 100dvh;
+    min-height: 0;
+    padding: 0;
+    overflow: hidden;
+  }
+
+  .game-card {
+    width: 100%;
+    height: 100dvh;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 116px;
+    grid-template-rows: 42px minmax(0, 1fr);
+    border-width: 0;
+    box-shadow: none;
+  }
+
   .game-header {
+    grid-column: 1 / -1;
+    grid-row: 1;
     min-height: 52px;
-    padding-top: 6px;
-    padding-bottom: 6px;
+    min-height: 0;
+    padding: 6px 10px;
+    border-bottom-width: 3px;
+  }
+
+  .grayling-wordmark {
+    padding-top: 3px;
+    font-size: 20px;
+  }
+
+  .mission {
+    padding: 4px 6px;
+  }
+
+  .game-stage {
+    grid-column: 1;
+    grid-row: 2;
+    display: grid;
+    place-items: center;
+  }
+
+  .game-stage canvas {
+    width: auto;
+    height: 100%;
+    max-width: 100%;
+    max-height: 100%;
   }
 
   .game-footer {
-    min-height: 82px;
+    grid-column: 2;
+    grid-row: 2;
+    min-height: 0;
+    height: 100%;
+    padding: 7px;
+    border-top: 0;
+    border-left: 3px solid #0e1728;
+  }
+
+  .touch-controls {
+    height: 100%;
+    flex-direction: column;
+    justify-content: center;
+    gap: 10px;
   }
 
   .d-pad {
-    height: 76px;
-    grid-template-rows: repeat(2, 36px);
+    width: 94px;
+    height: 66px;
+    grid-template-columns: repeat(3, 30px);
+    grid-template-rows: repeat(2, 30px);
+    gap: 2px;
   }
 
   .d-pad button {
-    min-height: 36px;
+    min-width: 30px;
+    min-height: 30px;
+  }
+
+  .action-button {
+    min-width: 88px;
+    min-height: 38px;
+    padding: 8px 5px;
+    font-size: 9px;
+  }
+
+  .start-panel {
+    width: min(330px, calc(100% - 20px));
+    padding: 10px;
+  }
+
+  .start-panel h2 {
+    margin: 5px 0;
+    font-size: 20px;
+  }
+
+  .start-panel p,
+  .tiny-label {
+    display: none;
   }
 }
 

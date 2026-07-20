@@ -21,4 +21,5 @@
   max-width: none !important;
   object-fit: contain !important;
   transform: none !important;
+  image-rendering: auto !important;
 }

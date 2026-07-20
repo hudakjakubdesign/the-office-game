@@ -645,7 +645,7 @@ kbd {
   }
 }
 
-@media (pointer: coarse) and (orientation: landscape) and (max-height: 600px) {
+@media (orientation: landscape) and (max-height: 900px) and (max-width: 1200px) {
   .game-page {
     height: 100dvh;
     min-height: 0;

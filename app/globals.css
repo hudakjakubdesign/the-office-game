@@ -437,7 +437,7 @@ kbd {
   align-items: center;
   justify-content: center;
   gap: 25px;
-  color: #dbe5e8;
+  color: var(--ink);
   font-family: var(--font-geist-mono), monospace;
   font-size: 10px;
   font-weight: 700;
@@ -448,6 +448,11 @@ kbd {
   display: flex;
   align-items: center;
   gap: 8px;
+}
+
+.desktop-controls kbd {
+  background: #fff7e7;
+  border-color: var(--ink);
 }
 
 .touch-controls {

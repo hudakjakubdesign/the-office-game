@@ -645,7 +645,7 @@ kbd {
   }
 }
 
-@media (orientation: landscape) and (max-height: 1100px) {
+@media (orientation: landscape) and (hover: none) and (max-height: 900px) {
   .game-page {
     height: 100dvh;
     min-height: 0;
@@ -658,13 +658,17 @@ kbd {
     height: 100dvh;
     display: grid;
     grid-template-columns: minmax(0, 1fr) 116px;
-    grid-template-rows: minmax(0, 1fr);
+    grid-template-rows: 42px minmax(0, 1fr);
     border-width: 0;
     box-shadow: none;
   }
 
   .game-header {
-    display: none;
+    grid-column: 1 / -1;
+    grid-row: 1;
+    min-height: 0;
+    padding: 5px 10px;
+    border-bottom-width: 3px;
   }
 
   .header-logo {
@@ -678,7 +682,7 @@ kbd {
 
   .game-stage {
     grid-column: 1;
-    grid-row: 1;
+    grid-row: 2;
     display: grid;
     place-items: center;
   }
@@ -692,7 +696,7 @@ kbd {
 
   .game-footer {
     grid-column: 2;
-    grid-row: 1;
+    grid-row: 2;
     min-height: 0;
     height: 100%;
     padding: 7px;

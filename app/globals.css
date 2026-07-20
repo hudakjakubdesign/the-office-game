@@ -98,6 +98,12 @@ button {
   line-height: 1;
 }
 
+.header-logo {
+  display: block;
+  width: 42px;
+  height: 42px;
+}
+
 .eyebrow,
 .tiny-label {
   margin: 0 0 5px;
@@ -507,6 +513,11 @@ kbd {
     width: clamp(82px, 28vw, 104px);
   }
 
+  .header-logo {
+    width: 34px;
+    height: 34px;
+  }
+
   .game-header h1 {
     font-size: clamp(16px, 5vw, 21px);
     white-space: nowrap;
@@ -661,9 +672,9 @@ kbd {
     border-bottom-width: 3px;
   }
 
-  .grayling-wordmark {
-    padding-top: 3px;
-    font-size: 20px;
+  .header-logo {
+    width: 30px;
+    height: 30px;
   }
 
   .mission {
